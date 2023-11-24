@@ -1,0 +1,7 @@
+[Unit]
+Description=updates tldr local cache
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=tldr --update

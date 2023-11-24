@@ -1,0 +1,10 @@
+[Unit]
+Description=delete items in trash over 30 days old
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+AccuracySec=1hours
+
+[Install]
+WantedBy=default.target

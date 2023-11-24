@@ -1,0 +1,10 @@
+[Unit]
+Description=takes monthly btrfs snapshots of root and home directories
+
+[Timer]
+OnCalendar=monthly
+Persistent=true
+AccuracySec=1hours
+
+[Install]
+WantedBy=default.target

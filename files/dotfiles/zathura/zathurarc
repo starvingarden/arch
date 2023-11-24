@@ -1,0 +1,2 @@
+# enable clipboard support
+set selection-clipboard clipboard

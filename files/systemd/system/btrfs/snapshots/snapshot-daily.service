@@ -1,0 +1,7 @@
+[Unit]
+Description=takes daily btrfs snapshots of root and home subvolumes
+After=default.target
+Wants=default.target
+
+[Service]
+ExecStart=snapshot-daily.sh

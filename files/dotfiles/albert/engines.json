@@ -1,0 +1,68 @@
+[
+    {
+        "iconPath": "/home/kaleb/.config/albert/websearch/{27d376f8-02bc-4354-aee7-32f75163902d}.",
+        "name": "Searx",
+        "trigger": "ss ",
+        "url": "https://searxng.nicfab.eu/searxng/search?q=%s"
+    },
+    {
+        "iconPath": "/home/kaleb/.config/albert/websearch/{388a7d7a-03dd-4a55-a18c-8ad1c3f44bb5}.",
+        "name": "Wikipedia",
+        "trigger": "ww ",
+        "url": "ww: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s"
+    },
+    {
+        "iconPath": ":youtube",
+        "name": "Youtube",
+        "trigger": "yt ",
+        "url": "https://www.youtube.com/results?search_query=%s"
+    },
+    {
+        "iconPath": "/home/kaleb/.config/albert/websearch/{1ad06d4a-5746-47c3-9df3-e69536e2e450}.",
+        "name": "Google Maps",
+        "trigger": "gm ",
+        "url": "https://www.google.com/maps/search/%s/"
+    },
+    {
+        "iconPath": "/home/kaleb/.config/albert/websearch/{5d699cad-cb99-4707-a0e1-2551073f1130}.",
+        "name": "Google",
+        "trigger": "gg ",
+        "url": "https://www.google.com/search?q=%s"
+    },
+    {
+        "iconPath": ":duckduckgo",
+        "name": "DuckDuckGo",
+        "trigger": "dd ",
+        "url": "https://duckduckgo.com/?q=%s"
+    },
+    {
+        "iconPath": ":amazon",
+        "name": "Amazon",
+        "trigger": "ama ",
+        "url": "http://www.amazon.com/s/?field-keywords=%s"
+    },
+    {
+        "iconPath": ":ebay",
+        "name": "Ebay",
+        "trigger": "eb ",
+        "url": "http://www.ebay.com/sch/i.html?_nkw=%s"
+    },
+    {
+        "iconPath": ":scholar",
+        "name": "Google Scholar",
+        "trigger": "scholar ",
+        "url": "https://scholar.google.com/scholar?q=%s"
+    },
+    {
+        "iconPath": ":github",
+        "name": "GitHub",
+        "trigger": "gh ",
+        "url": "https://github.com/search?utf8=✓&q=%s"
+    },
+    {
+        "iconPath": ":wolfram",
+        "name": "Wolfram Alpha",
+        "trigger": "=",
+        "url": "https://www.wolframalpha.com/input/?i=%s"
+    }
+]

@@ -1,0 +1,388 @@
+# Example config file located at /etc/sway/config
+# Read `man 5 sway` for a complete reference.
+
+# you can get the names of your outputs by running: swaymsg -t get_outputs
+# when setting display position, the origin is at the top left corner
+# scaling must be considered when setting position
+# if scaling for a display is 2, you can treat it's position as if it's divided by 2
+# to prevent the system from locking and sleeping, execute the command "pkill swayidle"
+
+
+
+
+
+######################
+# Device Configuration
+######################
+
+# Device Configuration Start
+
+# laptop solo
+#############
+
+# display variables
+set $display1 eDP-1
+
+# displays
+output $display1 mode --custom 2256x1504@60hz scale 1.5 position 0,0
+
+# show workspaces on display (comment out to cycle through displays)
+workspace 1 output $display1
+
+# focus display on startup
+focus output $display1
+
+# sleep
+exec_always swayidle -w timeout 900 'swaylock -f -c 000000' timeout 1800 'systemctl suspend-then-hibernate' before-sleep 'swaylock -f -c 000000'
+# this will lock your screen after the 1st timeout number of seconds of inactivity,
+# after the 2nd timeout number of seconds of inactivity your computer will go to sleep,
+# it will also lock your screen before your computer goes to sleep
+
+# laptop lid (use laptop "$displayVariable" for clamshell mode, "*" for normal mode)
+bindswitch --reload --locked lid:on output * disable
+bindswitch --reload --locked lid:off output * enable
+
+# Device Configuration End
+
+
+
+
+
+########################
+# Behavior Configuration
+########################
+
+# you can get the names of your outputs by running: swaymsg -t get_outputs
+# you can get the names of your inputs by running: swaymsg -t get_inputs
+# You can get app_id (wayland) and class (xwayland) with: swaymsg -t get_tree | grep -Ei 'app_id|class'
+
+# mouse
+input type:pointer {
+accel_profile flat
+pointer_accel 0.0
+}
+
+# touchpad
+input type:touchpad {
+tap enabled
+natural_scroll enabled
+accel_profile flat
+pointer_accel 0.3
+}
+
+# start/stop libvirt daemon automatically
+for_window [app_id="virt-manager"] exec sudo systemctl start libvirtd.service && libvirt-stop.sh
+
+# start/stop jackett daemon automatically
+for_window  [app_id="org.qbittorrent.qBittorrent"] exec sudo systemctl start jackett.service && jackett-stop.sh
+
+# inhibit idle (can be one of focus, fullscreen, open, none, visible)
+##for_window [class=".*"] inhibit_idle fullscreen
+##for_window [app_id=".*"] inhibit_idle fullscreen
+
+
+
+
+
+#########
+# Startup
+#########
+
+# enable albert
+##exec albert
+# see albert github issues for wayland
+###exec QT_QPA_PLATFORM=xcb albert
+
+# enable autotiling
+exec autotiling
+
+# clipboard
+# clipman
+# clipboard contents stored in ~/.local/share
+#exec wl-paste -t text --watch clipman store --max-items=1
+# clear clipboard on startup
+#exec clipman clear --all
+
+exec wl-clip-persist --clipboard regular
+
+# cliphist
+#exec trash ~/.cache/cliphist/db
+#exec wl-paste --type text --watch cliphist store #stores only text data
+#exec wl-paste --type image --watch cliphist store #stores only image data
+#exec wl-paste --watch cliphist -max-items 5 store
+
+# enable gammastep
+exec gammastep
+
+# enable mako
+exec mako
+
+# set screen brightness
+exec_always light -N 1
+exec_always light -S 20
+
+# set volume
+exec_always pactl set-sink-volume @DEFAULT_SINK@ 15%
+
+# xwayland
+###xwayland enable
+
+
+
+
+
+#####################
+# Style Configuration
+#####################
+
+# background image
+set $backgroundimage ~/.config/wallpapers/lofiriver.png
+#set $backgroundimage ~/.config/wallpapers/lofimountfuji.png
+output * background $backgroundimage stretch #000000
+
+default_border pixel 12
+gaps inner 12
+gaps outer 0
+
+# App specific configuration
+# You can get app_id (wayland) and class (xwayland) with: swaymsg -t get_tree | grep -Ei 'app_id|class'
+for_window  [class="Bitwarden"]                     opacity set 0.95
+for_window  [app_id="blueberry.py"]                 opacity set 0.95
+for_window  [app_id="@joplin/app-desktop"]          opacity set 0.95
+for_window  [app_id="org.gnome.Nautilus"]           opacity set 0.95
+for_window  [app_id="pavucontrol"]                  opacity set 0.95
+for_window  [app_id="org.qbittorrent.qBittorrent"]  opacity set 0.95
+
+# Color scheme
+# normal
+set $color_normal_black     #000000
+set $color_normal_white     #bbbbbb
+set $color_normal_gray      #555555
+set $color_normal_red       #ff4444
+set $color_normal_green     #11b867
+set $color_normal_blue      #208baf
+set $color_normal_yellow    #dddd33
+set $color_normal_magenta   #855989
+set $color_normal_cyan      #00cccc
+# bright
+set $color_bright_black     #333333
+set $color_bright_white     #ffffff
+set $color_bright_gray      #777777
+set $color_bright_red       #ff6666
+set $color_bright_green     #33e089
+set $color_bright_blue      #50bbcf
+set $color_bright_yellow    #ffff66
+set $color_bright_magenta   #b387c8
+set $color_bright_cyan      #00ffff
+
+# Colors            border          background      text            indicator       child_border
+# Color descriptions        title bar border    title bar background    title bar text      new window indicator    window border
+client.focused          $color_normal_green $color_bright_gray  $color_bright_white $color_normal_gray  $color_normal_green
+# focused window
+client.focused_inactive     $color_bright_gray  $color_bright_gray  $color_bright_white $color_bright_gray  $color_bright_black
+# most recently focused window after creating and focusing a new window
+client.unfocused        $color_normal_gray  $color_normal_gray  $color_normal_white $color_bright_gray  $color_bright_black
+# unfocused window (
+client.urgent           $color_normal_red   $color_normal_red   $color_normal_black $color_normal_red   $color_normal_red
+# window with urgency hint (only for Xwayland windows)
+
+
+
+
+
+###########
+# Variables
+###########
+
+# Logo key
+set $mod Mod1
+
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+
+# Your preferred terminal emulator
+set $term alacritty
+
+# Your preferred application launcher
+set $applauncher fuzzel
+#set $applauncher tofi-drun --drun-launch=true
+
+
+
+
+
+##############
+# Key bindings
+##############
+
+# Drag windows with mod+mouse
+floating_modifier $mod normal
+
+
+bindsym {
+
+# sound control
+# /usr/local/bin/pipewire-max-volume.sh sets max volume
+XF86AudioRaiseVolume exec pipewire-max-volume.sh
+XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+# if your keyboard has a mic mute key
+#XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+# if your keyboard does not have a mic mute key
+$mod+Shift+m exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# brightness control
+XF86MonBrightnessUp exec display-brightness-increase.sh
+XF86MonBrightnessDown exec display-brightness-decrease.sh
+
+# Launch a terminal
+$mod+Return exec $term
+
+# Kill focused window
+$mod+Shift+q kill
+
+# Launch app launcher
+$mod+m exec $applauncher
+
+# Launch clipboard manager
+#$mod+c
+
+# Reload the configuration file
+$mod+Shift+c reload
+
+# Exit sway (logs you out of your Wayland session)
+$mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit' --
+
+# Move your focus around
+$mod+$left focus left
+$mod+$down focus down
+$mod+$up focus up
+$mod+$right focus right
+# Or use $mod+[up|down|left|right]
+$mod+Left focus left
+$mod+Down focus down
+$mod+Up focus up
+$mod+Right focus right
+
+# Move the focused window with the same, but add Shift
+$mod+Shift+$left move left
+$mod+Shift+$down move down
+$mod+Shift+$up move up
+$mod+Shift+$right move right
+# Ditto, with arrow keys
+$mod+Shift+Left move left
+$mod+Shift+Down move down
+$mod+Shift+Up move up
+$mod+Shift+Right move right
+
+# Switch to workspace
+$mod+1 workspace number 1
+$mod+2 workspace number 2
+$mod+3 workspace number 3
+$mod+4 workspace number 4
+$mod+5 workspace number 5
+$mod+6 workspace number 6
+$mod+7 workspace number 7
+$mod+8 workspace number 8
+$mod+9 workspace number 9
+$mod+0 workspace number 10
+
+# Move focused container to workspace
+$mod+Shift+1 move container to workspace number 1
+$mod+Shift+2 move container to workspace number 2
+$mod+Shift+3 move container to workspace number 3
+$mod+Shift+4 move container to workspace number 4
+$mod+Shift+5 move container to workspace number 5
+$mod+Shift+6 move container to workspace number 6
+$mod+Shift+7 move container to workspace number 7
+$mod+Shift+8 move container to workspace number 8
+$mod+Shift+9 move container to workspace number 9
+$mod+Shift+0 move container to workspace number 10
+
+# Switch the current container between different layout styles
+#$mod+s layout stacking
+#$mod+t layout tabbed
+#$mod+e layout toggle split
+
+# Split direction
+$mod+x splith
+$mod+y splitv
+
+# Make the current focus fullscreen
+$mod+f fullscreen
+
+# Toggle the current focus between tiling and floating mode
+$mod+Shift+space floating toggle
+
+# Swap focus between the tiling area and the floating area
+$mod+space focus mode_toggle
+
+# Move focus to the parent container
+#$mod+a focus parent
+
+# Move the currently focused window to the scratchpad
+$mod+Shift+minus move scratchpad
+
+# Cycle through scratchpad windows
+$mod+minus scratchpad show
+
+# Resize mode
+$mod+r mode "resize"
+
+# Sticky mode
+#$mod+a sticky toggle
+
+
+
+}
+
+
+
+
+
+#############
+# Resize mode
+#############
+
+mode "resize" {
+bindsym $left resize shrink width 10px
+bindsym $down resize shrink height 10px
+bindsym $up resize grow height 10px
+bindsym $right resize grow width 10px
+
+# Ditto, with arrow keys
+bindsym Left resize shrink width 10px
+bindsym Down resize shrink height 10px
+bindsym Up resize grow height 10px
+bindsym Right resize grow width 10px
+
+# Return to default mode
+bindsym Return mode "default"
+bindsym Escape mode "default"
+}
+
+
+
+
+
+############
+# Status bar
+############
+
+bar {
+position top
+swaybar_command waybar
+}
+
+
+
+
+
+###############
+# System config
+###############
+
+include /etc/sway/config.d/*

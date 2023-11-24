@@ -1,0 +1,49 @@
+# behavior
+ignore-empty-password
+show-failed-attempts
+daemonize
+fade-in=0.5
+
+# appearance
+############
+
+# format
+image=~/.config/wallpapers/lofiriver.png
+scaling=stretch
+effect-blur=50x2
+indicator-idle-visible
+indicator
+clock
+timestr=%l:%M:%S %P
+datestr=%a %b-%e
+#font-size=100
+indicator-radius=150
+indicator-thickness=20
+
+
+# highlight (typing) colors
+key-hl-color=000000ff
+bs-hl-color=000000ff
+
+# inside colors
+inside-color=000000ff
+inside-caps-lock-color=000000ff
+inside-clear-color=000000ff
+inside-ver-color=000000ff
+inside-wrong-color=000000ff
+
+# line colors
+line-uses-inside
+
+# ring colors
+ring-color=000000ff
+ring-clear-color=dddd33ff
+ring-ver-color=00ccccff
+ring-wrong-color=ff4444ff
+
+# text colors
+text-color=11b867ff
+text-caps-lock-color=dddd33ff
+text-clear-color=dddd33ff
+text-ver-color=00ccccff
+text-wrong-color=ff4444ff

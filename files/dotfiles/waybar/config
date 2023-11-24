@@ -1,0 +1,185 @@
+// default config located at /etc/xdg/waybar/config
+// there are several man pages for waybar
+
+
+
+
+
+///////////////////////
+// Layout configuration
+///////////////////////
+
+{
+	"layer": "bottom", // Waybar at top layer
+	"position": "top", // Waybar position (top|bottom|left|right)
+	//"height": 40, // Waybar height (remove for auto height)
+	//"width": 1280, // Waybar width (remove for auto width)
+	//"spacing": 4, // Gaps between modules
+
+
+	// Order of modules
+	"modules-left": ["sway/workspaces", "tray", "sway/scratchpad", "battery"],
+	"modules-center": ["clock"],
+	"modules-right": ["keyboard-state", "pulseaudio", "memory", "cpu", "temperature"],
+
+
+
+
+
+///////////////////////
+// Module configuration
+///////////////////////
+
+	"battery": {
+		"states": {
+			// "good": 90,
+			"warning": 30,
+			"critical": 15
+		},
+		"format": "{icon} {capacity}%",
+		"format-charging": "{icon} {capacity}%",
+		"format-plugged": " {capacity}%",
+		// "format-good": "", // An empty format will hide the module
+		// "format-full": "",
+		"format-icons": ["", "", "", "", ""],
+		"interval": 15
+	},
+
+
+	"battery#bat2": {
+		"bat": "BAT2"
+	},
+
+
+	"clock": {
+		"interval": 1,
+		"format": "{:%a  %b-%d  %r}"
+	},
+
+
+	"cpu": {
+		"interval": 5,
+		"format": " {usage}%",
+		"tooltip": false
+	},
+
+
+	"keyboard-state": {
+		"capslock": true,
+		"numlock": false,
+		"scrolllock": false,
+		// "format": "{name} {icon}",
+		"format": "{icon}",
+		"format-icons": {
+		"locked": "Caps",
+		"unlocked": ""
+		},
+	},
+
+
+	"memory": {
+		"interval": 5,
+		"format": " {}%"
+	},
+
+
+	"pulseaudio": {
+		// "scroll-step": 1, // %, can be a float
+		"format": "{volume}% {format_source}",
+		"format-bluetooth": "{volume}% {icon} {format_source}",
+		"format-bluetooth-muted": " {icon} {format_source}",
+		"format-muted": " {format_source}",
+		"format-source": " {volume}%",
+		"format-source-muted": "",
+		"format-icons": {
+			"headphone": "",
+			"hands-free": "",
+			"headset": "",
+			"phone": "",
+			"portable": "",
+			"car": "",
+			"default": ["", "", ""]
+		},
+		"max-volume": 100,
+		"on-click": "pavucontrol"
+	},
+
+
+	"sway/scratchpad": {
+		"format": "{icon} {count}",
+		"show-empty": false,
+		"format-icons": ["", ""],
+		"tooltip": true,
+		"tooltip-format": "{app}: {title}"
+	},
+
+
+	"temperature": {
+		"interval": 5,
+		"critical-threshold": 90,
+		"format-critical": "{icon} {temperatureC}°C",
+		"format": "{icon} {temperatureC}°C",
+		"format-icons": ["", "", "", "", "", "", "", "", ""],
+		"tooltip": false
+	},
+
+
+	"tray": {
+		// "icon-size": 21,
+		"spacing": 10
+	},
+
+
+
+
+
+
+
+
+
+
+
+
+
+	"backlight": {
+		// "device": "acpi_video1",
+		"format": "{percent}% {icon}",
+		"format-icons": ["", "", "", "", "", "", "", "", ""]
+	},
+
+
+
+
+
+	"network": {
+		// "interface": "wlp2*", // (Optional) To force the use of this interface
+		"format-wifi": "{essid} ({signalStrength}%) ",
+		"format-ethernet": "{ipaddr}/{cidr} ",
+		"tooltip-format": "{ifname} via {gwaddr} ",
+		"format-linked": "{ifname} (No IP) ",
+		"format-disconnected": "Disconnected ⚠",
+		"format-alt": "{ifname}: {ipaddr}/{cidr}"
+	},
+
+
+
+
+
+	"custom/media": {
+		"format": "{icon} {}",
+		"return-type": "json",
+		"max-length": 40,
+		"format-icons": {
+			"spotify": "",
+			"default": "🎜"
+	},
+        "escape": true,
+        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
+        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+    }
+
+
+
+
+
+}

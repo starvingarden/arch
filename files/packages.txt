@@ -1,0 +1,150 @@
+# instructions
+##############
+
+# 1) if using wifi, connect with the command "nmtui"
+# 2) install the following packages with the following commands (paru and essential packages are required)
+# 3) if you opted to include the repo owner's custom configurations, its recommended to install everything or some things may not work as expected
+
+
+
+# install and configure paru
+############################
+
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -cris
+cd
+rm -rf paru
+sudo sed -i 's/#BottomUp/BottomUp/' /etc/paru.conf
+sudo sed -i 's/#RemoveMake/RemoveMake = yes/' /etc/paru.conf
+sudo sed -i 's/#CleanAfter/CleanAfter/' /etc/paru.conf
+sudo sed -i 's/#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
+paru
+
+
+
+# essential packages
+####################
+
+# official repo
+paru -S --needed arch-wiki-docs arch-wiki-lite bash-completion exfatprogs flatpak ifuse libimobiledevice npm ntfs-3g python-pip
+# aur
+paru -S --needed cheat
+
+
+
+# tools
+#######
+
+# official repo
+paru -S --needed bat bc cpupower firewalld fzf gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages mlocate nano neovim networkmanager-openvpn net-tools tealdeer thefuck trash-cli turbostat unzip zip zoxide
+# aur
+#none
+
+
+
+# desktop packages
+##################
+
+# official repo
+pacman -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes-extra gtk2 gtk3 gtk4 iio-sensor-proxy light noto-fonts noto-fonts-emoji otf-font-awesome qt5-base qt5-wayland qt6-base qt6-wayland seatd sway swaybg swayidle ttf-hack waybar wayland wayland-docs wayland-utils wl-clipboard xorg-xwayland
+# aur
+paru -S --needed autotiling swaylock-effects ttf-ms-fonts wl-clip-persist-git
+
+
+
+# laptop packages (only for laptop installs)
+############################################
+
+# official repo
+paru -S --needed cpupower powertop
+# aur
+#none
+
+
+
+# audio packages
+################
+
+# official repo
+paru -S --needed pipewire pipewire-alsa pipewire-audio pipewire-docs pipewire-jack pipewire-pulse sof-firmware wireplumber
+# aur
+#none
+
+
+
+# bluetooth packages
+####################
+
+# official repo
+paru -S --needed blueberry bluez bluez-utils
+# aur
+#none
+
+
+
+# printing packages
+###################
+
+# official repo
+paru -S --needed avahi cups cups-pdf foomatic-db-ppds foomatic-db-nonfree-ppds nss-mdns system-config-printer usbutils
+# aur
+#none
+
+
+
+# personal packages
+###################
+
+# official repo
+paru -S --needed alacritty android-tools bitwarden bleachbit blender btop clamav clonezilla discord easyeffects feh gammastep gedit gimp glow gnome-disk-utility handbrake handlr libreoffice-fresh lutris mako minetest mkvtoolnix-cli mpv nautilus neofetch nm-connection-editor nnn nvtop obs-studio shellcheck openshot pavucontrol qbittorrent qemu-full seahorse steam units vlc xournalpp zathura
+# aur
+paru -S --needed appimagelauncher cava cbonsai downgrade hollywood jackett joplin-desktop librewolf-bin makemkv mullvad-vpn-cli phoronix-test-suite prismlauncher soundcloud-dl spacecadetpinball-git spotify tor-browser upscayl-bin ventoy-bin xdg-ninja
+
+
+
+# hacking tools
+###############
+
+# official repo
+paru -S --needed freerdp hashcat hydra inetutils john metasploit nmap redis
+# aur
+paru -S --needed burpsuite nessus
+
+
+
+# optional dependencies
+#######################
+
+# gedit
+# official repo
+paru -S --needed gedit-plugins
+# aur
+#none
+
+# nautilus (see "GNOME/Files" and "file manager functionality" arch wiki pages)
+# official repo
+paru -S --needed gvfs-afc gvfs-gphoto2 gvfs-mtp sushi
+# aur
+#none
+
+# qemu
+# official repo
+paru -S --needed dnsmasq iptables-nft libvirt virt-manager
+# aur
+#none
+
+# zathura
+# official repo
+paru -S --needed zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps
+# aur
+#none
+
+
+
+# final instructions
+####################
+
+# run the config script as root with the following commands to finish configuring the system
+su
+./config.sh

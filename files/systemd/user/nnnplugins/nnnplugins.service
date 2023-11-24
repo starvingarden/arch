@@ -1,0 +1,7 @@
+[Unit]
+Description=installs or updates nnn plugins
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=curl -Ls https://raw.githubusercontent.com/jarun/nnn/master/plugins/getplugs | sh

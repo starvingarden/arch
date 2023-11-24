@@ -1,0 +1,22 @@
+
+# desktop home
+##############
+
+# display variables
+set $display1 DP-1
+
+# displays
+output $display1 mode --custom 3440x1440@144hz scale 1.1 position 0,0
+
+# show workspaces on display (comment out to cycle through displays)
+workspace 1 output $display1
+
+# focus display on startup
+focus output $display1
+
+# sleep
+exec_always swayidle -w timeout 1800 'swaylock -f -c 000000' timeout 3600 'systemctl suspend-then-hibernate' before-sleep 'swaylock -f -c 000000'
+# this will lock your screen after the 1st timeout number of seconds of inactivity,
+# after the 2nd timeout number of seconds of inactivity your computer will go to sleep,
+# it will also lock your screen before your computer goes to sleep
+

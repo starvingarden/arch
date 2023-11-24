@@ -1,0 +1,10 @@
+[Unit]
+Description=installs or updates nnn plugins
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+AccuracySec=1hours
+
+[Install]
+WantedBy=default.target

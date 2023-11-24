@@ -1,0 +1,13 @@
+
+# light
+#######
+
+[colors]
+background=ffffffee
+text=000000ff
+match=ff4444ff
+selection=ccccccff
+selection-text=000000ff
+selection-match=ff4444ff
+border=11b867ee
+

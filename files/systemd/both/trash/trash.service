@@ -1,0 +1,7 @@
+[Unit]
+Description=delete items in trash over 30 days old
+After=default.target
+Wants=default.target
+
+[Service]
+ExecStart=trash-empty 30

@@ -1,0 +1,10 @@
+build ()
+{
+    add_runscript
+}
+help ()
+{
+cat<<HELPEOF
+    This opens the swap encrypted partition SWAPPARTITION in DECRYPTEDSWAPPARTITION
+HELPEOF
+}

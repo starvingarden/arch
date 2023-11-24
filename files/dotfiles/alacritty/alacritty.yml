@@ -1,0 +1,122 @@
+# example config located at /usr/share/doc/alacritty/example/alacritty.yml
+
+env:
+  TERM: alacritty
+
+
+
+window:
+  padding:
+    x: 5
+    y: 5
+  dynamic_padding: true
+  decorations: none
+  opacity: 0.9
+  startup_mode: windowed
+  title: Alacritty
+  dynamic_title: true
+  class:
+    instance: Alacritty
+    general: Alacritty
+  decorations_theme_variant: None
+
+
+
+scrolling:
+  history: 50000
+  multiplier: 3
+
+
+
+font:
+  normal:
+    family: Hack
+    style: Regular
+  bold:
+    family: Hack
+    style: Bold
+  italic:
+    family: Hack
+    style: Italic
+  bold_italic:
+    family: Hack
+    style: Bold Italic
+  size: 12.0
+draw_bold_text_with_bright_colors: true
+
+
+
+colors:
+  primary:
+    background: '#111111'
+    foreground: '#ffffff'
+    #dim_foreground: 
+    #bright_foreground:
+
+  normal:
+    black:    '#000000'
+    white:    '#bbbbbb'
+    red:      '#ff4444'
+    green:    '#11b867'
+    blue:     '#208baf'
+    yellow:   '#dddd33'
+    magenta:  '#855989'
+    cyan:     '#00cccc'
+
+  bright:
+    black:    '#333333'
+    white:    '#ffffff'
+    red:      '#ff6666'
+    green:    '#33e089'
+    blue:     '#50bbcf'
+    yellow:   '#ffff66'
+    magenta:  '#b387c8'
+    cyan:     '#00ffff'
+
+  dim:
+    black:   '#131415'
+    white:   '#eeeeee'
+    red:     '#864343'
+    green:   '#777c44'
+    blue:    '#556a7d'
+    yellow:  '#9e824c'
+    magenta: '#75617b'
+    cyan:    '#5b7d78'
+
+  transparent_background_colors: true
+
+  #cursor:
+    #text: CellBackground
+    #cursor: CellForeground
+
+  #vi_mode_cursor
+    #text: CellBackground
+    #cursor: CellForeground
+
+  #search:
+    #matches:
+      #foreground: CellForeground
+      #background: CellBackground
+    #focused_match:
+      #foreground: CellForeground
+      #background: CellBackground 
+
+  #hints:
+    #start:
+      #foreground: '#ff0000'
+      #background: '#00ff00'
+    #end:
+      #foreground: '#0000ff'
+      #background: '#ff0000'
+
+  #line_indicator:
+    #foreground: None
+    #background: None
+
+  #footer_bar:
+    #background:
+    #foreground:
+
+  #selection:
+    #text: Cellbackground
+    #background: CellForeground

@@ -1,0 +1,13 @@
+
+# dark
+######
+
+[colors]
+background=000000dd
+text=ffffffff
+match=ff4444ff
+selection=333333ff
+selection-text=ffffffff
+selection-match=ff4444ff
+border=11b867ee
+
