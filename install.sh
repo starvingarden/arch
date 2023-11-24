@@ -26,27 +26,27 @@
 
 
 
-hostName=""
+hostName="arch"
     # this is the device name
     # example: hostName="arch"
 
-userName=""
+userName="johndoe"
     # this is your user name
     # example: userName="john"
 
-userPassword=""
+userPassword="password"
     # this is your user password
     # example: userPassword="abc123"
 
-rootPassword=""
+rootPassword="password"
     # this is the root (administrator) password
     # example: rootPassword="abc123"
 
-encryptionPassword=""
+encryptionPassword="password"
     # this is the password to be used for disk encryption
     # example: encryptionPassword="abc123"
 
-osDisks=""
+osDisks="vda"
     # this is a list of space separated disks to use for the operating system
     # you must use 1 or 2 disks
     # if you use 2 disks, raid will automatically be applied to the operating system
@@ -75,12 +75,12 @@ diskWipe=""
     # this can take a long time
     # example: diskWipe="true"
 
-timeZone=""
+timeZone="US/Central"
     # this sets the time zone
     # run "timedatectl list-timezones" to list available timezones
     # example: timeZone="US/Central"
 
-reflectorCode=""
+reflectorCode="US"
     # this sets the country to download packages from
     # must set to 2 capital letters
     # run "reflector --list-countries" to list available countries and their codes
