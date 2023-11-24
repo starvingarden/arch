@@ -576,10 +576,10 @@ do
     yes | mkfs.fat -F 32 -n "${efipartitionNames[$element]}" "${efiPartitions[$element]}"
 done
 # create swap filesystem(s)
-for element in "${!swapNames[$element]}"
-do
+#for element in "${!swapNames[$element]}"
+#do
 #    mkswap -L "${swapNames[$element]}" /dev/"${volumegroupNames[$element]}"/"${swapNames[$element]}"
-done
+#done
 # create root filesystem
 if [ "$osRaid" == false ]
 then
