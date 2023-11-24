@@ -221,7 +221,7 @@ sleep 3
 # set grub timeout
 sed -i 's/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT=3/' /etc/default/grub
 # enable booting from encrypted devices
-#sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
+sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # add the following kernel parameters
 # rd.luks.name=$encryptedlvmUUID=${encryptedcontainerNames[0]} (specifies unlocking and naming of the root partition on boot)
 # root=UUID=$decryptedrootUUID (this can be omitted?) (maybe include this for when using multiple disks?)
