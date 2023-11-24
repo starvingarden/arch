@@ -206,7 +206,7 @@ mkinitcpio -P
 # get first decrypted swap partition uuid
 #decryptedswapUUID=$(blkid -s UUID -o value "${decryptedswapPartitions[0]}")
 # get first encrypted root partition uuid
-encryptedcontainerUUID=$(blkid -s UUID -o value "${lvmPartitions[0]}")
+encryptedcontainerUUID=$(blkid -s UUID -o value "${encryptedcontainerNames[0]}")
 # get first decrypted swap partition uuid
 #decryptedrootUUID=$(blkid -s UUID -o value "${decryptedrootPartitions[0]}")
 
