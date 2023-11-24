@@ -271,7 +271,7 @@ done
 # set encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
 # create empty array for encrypted container names
 encryptedcontainerNames=()
-for element in "${lvmpartitionNames}"
+for element in "${lvmpartitionNames[@]}"
 do
     encryptedcontainerNames+=(cryptlvm-"$element")
 done
