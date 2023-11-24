@@ -11,6 +11,7 @@
 # user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
 # change "lvm partitons" to "root partitions"
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
+# kpartx command to use disks that are already configured
 
 
 ######################################################
