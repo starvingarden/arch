@@ -230,7 +230,7 @@ fi
 # set os partition(s) (used when creating filesystems)
 # create empty arrays for os partitions
 efiPartitions=()
-lvmPartitions=()
+rootPartitions=()
 # set os partitions
 for element in "${osDisks[@]}"
 do
@@ -239,40 +239,40 @@ do
     if [ -z "$nvme" ]
     then
         efiPartitions+=("$element"1)
-        lvmPartitions+=("$element"2)
+        rootPartitions+=("$element"2)
     else
         efiPartitions+=("$element"p1)
-        lvmPartitions+=("$element"p2)
+        rootPartitions+=("$element"p2)
     fi
 done
 # efi partitions should be in the form of "sda1", "nvme0n1p1", etc.
-# lvm partitions should be in the form of "sda2", "nvme0n1p2", etc.
+# root partitions should be in the form of "sda2", "nvme0n1p2", etc.
 
 
 # set os partition names (used when setting lvm names, encrypted container names, and creating os partitions)
 # create empty arrays for os parition names
 efipartitionNames=()
-lvmpartitionNames=()
+rootpartitionNames=()
 # set efi partition name(s)
 for element in "${!osDisks[@]}"
 do
     efiPartition=(osdisk"$element"p1)
     efipartitionNames+=("$efiPartition")
 done
-# set lvm partition name(s)
+# set root partition name(s)
 for element in "${!osDisks[@]}"
 do
-    lvmPartition=(osdisk"$element"p2)
-    lvmpartitionNames+=("$lvmPartition")
+    rootPartition=(osdisk"$element"p2)
+    rootpartitionNames+=("$rootPartition")
 done
 # efi partition names should be in the form of "osdisk1p1", "osdisk2p1", etc.
-# lvm partition names should be in the form of "osdisk1p2", "osdisk2p2", etc.
+# root partition names should be in the form of "osdisk1p2", "osdisk2p2", etc.
 
 
 # set encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
 # create empty array for encrypted container names
 encryptedcontainerNames=()
-for element in "${lvmpartitionNames[@]}"
+for element in "${rootpartitionNames[@]}"
 do
     encryptedcontainerNames+=(cryptlvm-"$element")
 done
@@ -282,7 +282,7 @@ done
 # set volume group name(s)
 # create empty array for volume group names
 volumegroupNames=()
-for element in "${lvmpartitionNames[@]}"
+for element in "${rootpartitionNames[@]}"
 do
     volumegroupNames+=(volgroup-"$element")
 done
@@ -313,7 +313,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, lvm partitions=${lvmPartitions[@]}, efi partition names=${efipartitionNames[@]}, lvm partition names=${lvmpartitionNames[@]}, encrypted container names=${encryptedcontainerNames[@]}, volume group names=${volumegroupNames[@]}, logical volume names=${swapNames[@]} ${rootNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, root partitions=${rootPartitions[@]}, efi partition names=${efipartitionNames[@]}, root partition names=${rootpartitionNames[@]}, encrypted container names=${encryptedcontainerNames[@]}, volume group names=${volumegroupNames[@]}, logical volume names=${swapNames[@]} ${rootNames[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -393,9 +393,9 @@ do
     echo "efiPartitions+=($element)" >> ./variables.txt
 done
 
-for element in "${lvmPartitions[@]}"
+for element in "${rootPartitions[@]}"
 do
-    echo "lvmPartitions+=($element)" >> ./variables.txt
+    echo "rootPartitions+=($element)" >> ./variables.txt
 done
 
 for element in "${efipartitionNames[@]}"
@@ -403,9 +403,9 @@ do
     echo "efipartitionNames+=($element)" >> ./variables.txt
 done
 
-for element in "${lvmpartitionNames[@]}"
+for element in "${rootpartitionNames[@]}"
 do
-    echo "lvmpartitionNames+=($element)" >> ./variables.txt
+    echo "rootpartitionNames+=($element)" >> ./variables.txt
 done
 
 for element in "${encryptedcontainerNames[@]}"
@@ -511,7 +511,7 @@ do
     # efi partition
     sgdisk --change-name=1:"${efipartitionNames[$element]}"
     # lvm partition
-    sgdisk --change-name=2:"${lvmpartitionNames[$element]}"
+    sgdisk --change-name=2:"${rootpartitionNames[$element]}"
 done
 # create data partition(s)
 for element in "${!dataDisks[@]}"
@@ -530,13 +530,13 @@ done
 # encrypt necessary partitions
 printf "\e[1;32m\nEncrypting necessary partitions\n\e[0m"
 sleep 3
-# set up encryption for LVM partition(s)
-for element in "${!lvmPartitions[@]}"
+# set up encryption for root partition(s)
+for element in "${!rootPartitions[@]}"
 do
-    # encrypt lvm partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${lvmPartitions[$element]}"    # grub has limited support for luks2
-    # decrypt and name decrypted lvm partition(s) so it can be used
-    echo -e "$encryptionPassword" | cryptsetup open /dev/"${lvmPartitions[$element]}" "${encryptedcontainerNames[$element]}"
+    # encrypt root partition(s)
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${rootPartitions[$element]}"    # grub has limited support for luks2
+    # decrypt and name decrypted root partition(s) so it can be used
+    echo -e "$encryptionPassword" | cryptsetup open /dev/"${rootPartitions[$element]}" "${encryptedcontainerNames[$element]}"
 done
 # set up encryption for data partition(s)
 for element in "${!dataPartitions[@]}"
@@ -549,21 +549,36 @@ done
 
 
 # create logical volumes
+#printf "\e[1;32m\nCreating logical volumes\n\e[0m"
+#sleep 3
+# create physical volume(s)
+#for element in "${encryptedcontainerNames[@]}"
+#do
+#    pvcreate /dev/mapper/"$element"
+#done
+# create volume group(s)
+#for element in "${!encryptedcontainerNames[@]}"
+#do
+#    vgcreate "${volumegroupNames[$element]}" /dev/mapper/"${encryptedcontainerNames[$element]}"
+#done
+# create logical volumes
+#for element in "${!rootpartitionNames[@]}"
+#do
+#    lvcreate -L "$ramSize" "${volumegroupNames[$element]}" -n "${swapNames[$element]}"
+#    lvcreate -l 100%FREE "${volumegroupNames[$element]}" -n "${rootNames[$element]}"
+#done
+
+
+# create logical volumes
 printf "\e[1;32m\nCreating logical volumes\n\e[0m"
 sleep 3
-# create physical volume(s)
-for element in "${encryptedcontainerNames[@]}"
+for element in "${!rootpartitionNames[@]}"
 do
-    pvcreate /dev/mapper/"$element"
-done
-# create volume group(s)
-for element in "${!encryptedcontainerNames[@]}"
-do
+    # create physical volume(s)
+    pvcreate /dev/mapper/"${encryptedcontainerNames[$element]}"
+    # create volume group(s)
     vgcreate "${volumegroupNames[$element]}" /dev/mapper/"${encryptedcontainerNames[$element]}"
-done
-# create logical volumes
-for element in "${!lvmpartitionNames[@]}"
-do
+    # create logical volumes
     lvcreate -L "$ramSize" "${volumegroupNames[$element]}" -n "${swapNames[$element]}"
     lvcreate -l 100%FREE "${volumegroupNames[$element]}" -n "${rootNames[$element]}"
 done
