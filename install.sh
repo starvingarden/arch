@@ -126,14 +126,14 @@ osDisks=($osDisks)
 dataDisks=($dataDisks)
 
 # change elements in disk arrays from the form "sda" to the form "/dev/sda"
-for element in "${!osDisks[@]}"
-do
-    osDisks[$element]="/dev/${osDisks[$element]}"
-done
-for element in "${!dataDisks[@]}"
-do
-    dataDisks[$element]="/dev/${dataDisks[$element]}"
-done
+#for element in "${!osDisks[@]}"
+#do
+#    osDisks[$element]="/dev/${osDisks[$element]}"
+#done
+#for element in "${!dataDisks[@]}"
+#do
+#    dataDisks[$element]="/dev/${dataDisks[$element]}"
+#done
 
 
 
@@ -245,7 +245,8 @@ do
         lvmPartitions+=("$element"p2)
     fi
 done
-# os partitions should be in the form of "/dev/sda1", "/dev/nvme0n1p2", etc.
+# efi partitions should be in the form of "sda1", "nvme0n1p1", etc.
+# lvm partitions should be in the form of "sda2", "nvme0n1p2", etc.
 
 
 # set os partition names (used when setting lvm names, encrypted container names, and creating os partitions)
@@ -476,14 +477,14 @@ then
     # wipe os disks
     for element in "${osDisks[@]}"
     do
-        cryptsetup open --type plain -d /dev/random "$element" to_be_wiped
+        cryptsetup open --type plain -d /dev/random /dev/"$element" to_be_wiped
         dd if=/dev/zero of=/dev/mapper/to_be_wiped status=progress
         cryptsetup close to_be_wiped
     done
     # wipe data disks
     for element in "${dataDisks[@]}"
     do
-        cryptsetup open --type plain -d /dev/random "$element" to_be_wiped
+        cryptsetup open --type plain -d /dev/random /dev/"$element" to_be_wiped
         dd if=/dev/zero of=/dev/mapper/to_be_wiped status=progress
         cryptsetup close to_be_wiped
     done
@@ -497,15 +498,15 @@ sleep 3
 for element in "${!osDisks[@]}"
 do
     # wipe the partition table
-    sgdisk --zap-all "${osDisks[$element]}"
+    sgdisk --zap-all /dev/"${osDisks[$element]}"
     # create partition #1 1GB in size
-    sgdisk --new=1:0:+1G "${osDisks[$element]}"
+    sgdisk --new=1:0:+1G /dev/"${osDisks[$element]}"
     # set partition #1 type to "EFI system partition"
-    sgdisk --typecode=1:ef00 "${osDisks[$element]}"
+    sgdisk --typecode=1:ef00 /dev/"${osDisks[$element]}"
     # create partition #2 to the size of the rest of the disk
-    sgdisk --new=2:0:0 "${osDisks[$element]}"
+    sgdisk --new=2:0:0 /dev/"${osDisks[$element]}"
     # set partition #2 type to "Linux LUKS"
-    sgdisk --typecode=2:8309 "${osDisks[$element]}"
+    sgdisk --typecode=2:8309 /dev/"${osDisks[$element]}"
     # set names for os partitions
     # efi partition
     sgdisk --change-name=1:"${efipartitionNames[$element]}"
@@ -516,13 +517,13 @@ done
 for element in "${!dataDisks[@]}"
 do
     # wipe the partition table
-    sgdisk --zap-all "${dataDisks[$element]}"
+    sgdisk --zap-all /dev/"${dataDisks[$element]}"
     # create partition #1 to the size of the entire disk
-    sgdisk --new=1:0:0 "${dataDisks[$element]}"
+    sgdisk --new=1:0:0 /dev/"${dataDisks[$element]}"
     # set partition #1 type to "Linux filesystem"
-    sgdisk --typecode=1:8300 "${dataDisks[$element]}"
+    sgdisk --typecode=1:8300 /dev/"${dataDisks[$element]}"
     # set name for data partition
-    sgdisk --change-name=1:datadisk"$element"p1
+    sgdisk --change-name=1:"${datapartitonNames[$element]}"
 done
 
 
@@ -533,17 +534,17 @@ sleep 3
 for element in "${!lvmPartitions[@]}"
 do
     # encrypt lvm partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 "${lvmPartitions[$element]}"    # grub has limited support for luks2
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${lvmPartitions[$element]}"    # grub has limited support for luks2
     # decrypt and name decrypted lvm partition(s) so it can be used
-    echo -e "$encryptionPassword" | cryptsetup open "${lvmPartitions[$element]}" "${encryptedcontainerNames[$element]}"
+    echo -e "$encryptionPassword" | cryptsetup open /dev/"${lvmPartitions[$element]}" "${encryptedcontainerNames[$element]}"
 done
 # set up encryption for data partition(s)
 for element in "${!dataPartitions[@]}"
 do
     # encrypt data partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 "${dataPartitions[$element]}"    # grub has limited support for luks2
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${dataPartitions[$element]}"    # grub has limited support for luks2
     # decrypt and name decrypted data partition(s) so it can be used
-    echo -e "$encryptionPassword" | cryptsetup open "${dataPartitions[$element]}" "${decrypteddatapartitionNames[$element]}"
+    echo -e "$encryptionPassword" | cryptsetup open /dev/"${dataPartitions[$element]}" "${decrypteddatapartitionNames[$element]}"
 done
 
 
@@ -574,7 +575,7 @@ sleep 3
 # create efi filesystem(s)
 for element in "${!efiPartitions[@]}"
 do
-    yes | mkfs.fat -F 32 -n "${efipartitionNames[$element]}" "${efiPartitions[$element]}"
+    yes | mkfs.fat -F 32 -n "${efipartitionNames[$element]}" /dev/"${efiPartitions[$element]}"
 done
 # create swap filesystem(s)
 #for element in "${!swapNames[$element]}"
