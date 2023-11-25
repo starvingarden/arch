@@ -293,7 +293,7 @@ done
 # create empty arrays for logical volume names
 swapNames=()
 rootNames=()
-for element in "${lvmpartitionNames[@]}"
+for element in "${rootpartitionNames[@]}"
 do
     swapNames+=(swap-"$element")
     rootNames+=(root-"$element")
