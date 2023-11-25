@@ -648,7 +648,7 @@ mkdir -p /mnt/var
 printf "\e[1;32m\nMounting filesystems\n\e[0m"
 sleep 3
 # mount efi filesystem
-mount "${efiPartitions[0]}" /mnt/efi
+mount /dev/"${efiPartitions[0]}" /mnt/efi
 # mount swap filesystem
 #swapon /dev/"${volumegroupNames[0]}"/"${swapNames[0]}"
 # mount btrfs filesystem
