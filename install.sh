@@ -12,6 +12,7 @@
 # change "lvm partitons" to "root partitions"
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
 # kpartx command to use disks that are already configured
+# each disk has its own physical volume, volume group, and logical volume(s). RAID is used via btrfs
 
 
 ######################################################
@@ -125,16 +126,6 @@ customConfig=""
 osDisks=($osDisks)
 dataDisks=($dataDisks)
 
-# change elements in disk arrays from the form "sda" to the form "/dev/sda"
-#for element in "${!osDisks[@]}"
-#do
-#    osDisks[$element]="/dev/${osDisks[$element]}"
-#done
-#for element in "${!dataDisks[@]}"
-#do
-#    dataDisks[$element]="/dev/${dataDisks[$element]}"
-#done
-
 
 
 
@@ -227,10 +218,10 @@ else
 fi
 
 
-# set os partition(s) (used when creating filesystems)
+# set os partition(s) (used when creating and mounting filesystems)
 # create empty arrays for os partitions
 efiPartitions=()
-rootPartitions=()
+cryptosPartitions=()
 # set os partitions
 for element in "${osDisks[@]}"
 do
@@ -249,56 +240,56 @@ done
 # root partitions should be in the form of "sda2", "nvme0n1p2", etc.
 
 
-# set os partition names (used when setting lvm names, encrypted container names, and creating os partitions)
+# set os partition names (used when creating os partitions)
 # create empty arrays for os parition names
 efipartitionNames=()
-rootpartitionNames=()
+ospartitionNames=()
 # set efi partition name(s)
 for element in "${!osDisks[@]}"
 do
     efiPartition=(osdisk"$element"p1)
     efipartitionNames+=("$efiPartition")
 done
-# set root partition name(s)
+# set os partition name(s)
 for element in "${!osDisks[@]}"
 do
-    rootPartition=(osdisk"$element"p2)
-    rootpartitionNames+=("$rootPartition")
+    osPartition=(osdisk"$element"p2)
+    ospartitionNames+=("$rootPartition")
 done
-# efi partition names should be in the form of "osdisk1p1", "osdisk2p1", etc.
-# root partition names should be in the form of "osdisk1p2", "osdisk2p2", etc.
+# efi partition names should be in the form of "osdisk0p1", "osdisk1p1", etc.
+# os partition names should be in the form of "osdisk0p2", "osdisk1p2", etc.
 
 
-# set encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
-# create empty array for encrypted container names
-encryptedcontainerNames=()
-for element in "${rootpartitionNames[@]}"
+# set os encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
+# create empty array for os encrypted container names
+osencryptedcontainerNames=()
+for element in "${!osDisks[@]}"
 do
-    encryptedcontainerNames+=(cryptlvm-"$element")
+    osencryptedcontainerNames+=("$element")
 done
-# encrypted container names should be of the form "cryptlvm-osdisk1p2", "cryptlvm-osdisk2p2", etc.
+# os encrypted container names should be of the form "cryptos0", "cryptos1", etc.
 
 
-# set volume group name(s)
-# create empty array for volume group names
-volumegroupNames=()
-for element in "${rootpartitionNames[@]}"
+# set os volume group name(s)
+# create empty array for os volume group names
+osvolgroupNames=()
+for element in "${!osDisks[@]}"
 do
-    volumegroupNames+=(volgroup-"$element")
+    osvolgroupNames+=(osvolgroup"$element")
 done
-# volume groups should be in the form of "volgroup-osdisk1p2", "volgroup-osdisk2p2", etc.
+# os volume group names should be in the form of "osvolgroup0", "osvolgroup1", etc.
 
 
-# set logical volume names
-# create empty arrays for logical volume names
+# set os logical volume names
+# create empty arrays for os logical volume names
 swapNames=()
 rootNames=()
-for element in "${rootpartitionNames[@]}"
+for element in "${!osDisks[@]}"
 do
-    swapNames+=(swap-"$element")
-    rootNames+=(root-"$element")
+    swapNames+=(swap"$element")
+    rootNames+=(root"$element")
 done
-# logical volume names should be in the form of "swap-osdisk1p2", "root-osdisk1p2", etc.
+# os logical volume names should be in the form of "swap0", "swap1", "root0", "root1", etc.
 
 
 
@@ -313,7 +304,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, root partitions=${rootPartitions[@]}, efi partition names=${efipartitionNames[@]}, root partition names=${rootpartitionNames[@]}, encrypted container names=${encryptedcontainerNames[@]}, volume group names=${volumegroupNames[@]}, logical volume names=${swapNames[@]} ${rootNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, os partitions=${osPartitions[@]}, efi partition names=${efipartitionNames[@]}, os partition names=${ospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swapNames[@]} ${rootNames[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -393,9 +384,9 @@ do
     echo "efiPartitions+=($element)" >> ./variables.txt
 done
 
-for element in "${rootPartitions[@]}"
+for element in "${osPartitions[@]}"
 do
-    echo "rootPartitions+=($element)" >> ./variables.txt
+    echo "osPartitions+=($element)" >> ./variables.txt
 done
 
 for element in "${efipartitionNames[@]}"
@@ -403,19 +394,19 @@ do
     echo "efipartitionNames+=($element)" >> ./variables.txt
 done
 
-for element in "${rootpartitionNames[@]}"
+for element in "${ospartitionNames[@]}"
 do
-    echo "rootpartitionNames+=($element)" >> ./variables.txt
+    echo "ospartitionNames+=($element)" >> ./variables.txt
 done
 
-for element in "${encryptedcontainerNames[@]}"
+for element in "${osencryptedcontainerNames[@]}"
 do
-    echo "encryptedcontainerNames+=($element)" >> ./variables.txt
+    echo "osencryptedcontainerNames+=($element)" >> ./variables.txt
 done
 
-for element in "${volumegroupNames[@]}"
+for element in "${osvolgroupNames[@]}"
 do
-    echo "volumegroupNames+=($element)" >> ./variables.txt
+    echo "osvolgroupNames+=($element)" >> ./variables.txt
 done
 
 for element in "${swapNames[@]}"
@@ -510,8 +501,8 @@ do
     # set names for os partitions
     # efi partition
     sgdisk --change-name=1:"${efipartitionNames[$element]}"
-    # lvm partition
-    sgdisk --change-name=2:"${rootpartitionNames[$element]}"
+    # os partition
+    sgdisk --change-name=2:"${ospartitionNames[$element]}"
 done
 # create data partition(s)
 for element in "${!dataDisks[@]}"
@@ -531,12 +522,12 @@ done
 printf "\e[1;32m\nEncrypting necessary partitions\n\e[0m"
 sleep 3
 # set up encryption for root partition(s)
-for element in "${!rootPartitions[@]}"
+for element in "${!osDisks[@]}"
 do
     # encrypt root partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${rootPartitions[$element]}"    # grub has limited support for luks2
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${osPartitions[$element]}"    # grub has limited support for luks2
     # decrypt and name decrypted root partition(s) so it can be used
-    echo -e "$encryptionPassword" | cryptsetup open /dev/"${rootPartitions[$element]}" "${encryptedcontainerNames[$element]}"
+    echo -e "$encryptionPassword" | cryptsetup open /dev/"${osPartitions[$element]}" "${osencryptedcontainerNames[$element]}"
 done
 # set up encryption for data partition(s)
 for element in "${!dataPartitions[@]}"
@@ -572,15 +563,15 @@ done
 # create logical volumes
 printf "\e[1;32m\nCreating logical volumes\n\e[0m"
 sleep 3
-for element in "${!rootpartitionNames[@]}"
+for element in "${!osDisks[@]}"
 do
     # create physical volume(s)
-    pvcreate /dev/mapper/"${encryptedcontainerNames[$element]}"
+    pvcreate /dev/mapper/"${osencryptedcontainerNames[$element]}"
     # create volume group(s)
-    vgcreate "${volumegroupNames[$element]}" /dev/mapper/"${encryptedcontainerNames[$element]}"
+    vgcreate "${osvolgroupNames[$element]}" /dev/mapper/"${osencryptedcontainerNames[$element]}"
     # create logical volumes
-    lvcreate -L "$ramSize" "${volumegroupNames[$element]}" -n "${swapNames[$element]}"
-    lvcreate -l 100%FREE "${volumegroupNames[$element]}" -n "${rootNames[$element]}"
+    lvcreate -L "$ramSize" "${osvolgroupNames[$element]}" -n "${swapNames[$element]}"
+    lvcreate -l 100%FREE "${osvolgroupNames[$element]}" -n "${rootNames[$element]}"
 done
 
 
@@ -588,7 +579,7 @@ done
 printf "\e[1;32m\nCreating filesystems\n\e[0m"
 sleep 3
 # create efi filesystem(s)
-for element in "${!efiPartitions[@]}"
+for element in "${!osDisks[@]}"
 do
     yes | mkfs.fat -F 32 -n "${efipartitionNames[$element]}" /dev/"${efiPartitions[$element]}"
 done
@@ -600,7 +591,7 @@ done
 # create root filesystem
 if [ "$osRaid" == false ]
 then
-    yes | mkfs.btrfs -L root -f -m dup -d single /dev/"${volumegroupNames[0]}"/"${rootNames[0]}"
+    yes | mkfs.btrfs -L "${rootNames[0]}" -f -m dup -d single /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}"
 fi
 if [ "$osRaid" == true ]
 then
@@ -608,11 +599,11 @@ then
     # create empty array for root filesystem paths
     rootPaths=()
     # set root filesystem paths
-    for element in "${!volumegroupNames[@]}"
+    for element in "${!osDisks[@]}"
     do
         rootPaths+=(/dev/"${volumegroupNames[$element]}"/"${rootNames[$element]}")
     done
-    yes | mkfs.btrfs -L root -f -m raid1 -d raid1 "${rootPaths[@]}"
+    yes | mkfs.btrfs -L rootraid -f -m raid1 -d raid1 "${rootPaths[@]}"
 fi
 
 
@@ -620,7 +611,7 @@ fi
 printf "\e[1;32m\nCreating btrfs subvolumes\n\e[0m"
 sleep 3
 # mount root filesystem so that subvolumes can be created
-mount /dev/"${volumegroupNames[0]}"/"${rootNames[0]}" /mnt
+mount /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt
 # create btrfs subvolumes
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
