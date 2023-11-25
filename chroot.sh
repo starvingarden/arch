@@ -187,8 +187,10 @@ sed -i 's/BINARIES=()/BINARIES=(btrfs)/' /etc/mkinitcpio.conf
 # change hooks from udev to systemd
 # change the "udev" hook to the "systemd" hook (see arch wiki page "btrfs#Multi-device_file_system")
 sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf
+# remove the "consonefont" hook (see arch wiki page "dm-crypt/Encrypting an entire system#Encrypted boot partition (GRUB)")
+sed -i '/^HOOKS=/ s/consolefont //g' /etc/mkinitcpio.conf
 # change the "keymap" hook to the "sd-vconsole" hook (in /etc/vconsole.conf add the line "KEYMAP=us")
-#sed -i '/^HOOKS=/ s/keymap/sd-vconsole/' /etc/mkinitcpio.conf
+sed -i '/^HOOKS=/ s/keymap/sd-vconsole/' /etc/mkinitcpio.conf
 # add the sd-encrypt and lvm2 hooks before the filesystems hook for encryption support (see examples at /etc/mkinitcpio.conf, and arch wiki pages "dm-crypt/System configuration#mkinitcpio" and "dm-crypt/Encrypting an entire system#LVM on LUKS")
 sed -i '/^HOOKS=/ s/filesystems/sd-encrypt lvm2 &/g' /etc/mkinitcpio.conf
 # move the keyboard hook to before the autodetect hook (see arch wiki page "dm-crypt/System configuration")
