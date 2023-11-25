@@ -208,7 +208,7 @@ mkinitcpio -P
 # get first decrypted swap partition uuid
 #decryptedswapUUID=$(blkid -s UUID -o value "${decryptedswapPartitions[0]}")
 # get first encrypted root partition uuid
-encryptedcontainerUUID=$(blkid -s UUID -o value "${encryptedcontainerNames[0]}")
+rootpartitionUUID=$(blkid -s UUID -o value "${rootPartition[0]}")
 # get first decrypted swap partition uuid
 #decryptedrootUUID=$(blkid -s UUID -o value "${decryptedrootPartitions[0]}")
 
@@ -229,14 +229,14 @@ sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # root=UUID=$decryptedrootUUID (this can be omitted?) (maybe include this for when using multiple disks?)
 # resume=UUID=$decryptedswapUUID (enables resuming from swap file hibernation) (maybe use resume=${decryptedswappartitionNames[0]})
 # sysctl.vm.swappiness=0 (sets swappiness on boot)
-sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$encryptedcontainerUUID=${encryptedcontainerNames[0]} root=/dev/${volumegroupNames[0]}/${rootNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
+sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$rootpartitionUUID=${encryptedcontainerNames[0]} root=/dev/${volumegroupNames[0]}/${rootNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
 if [ -z "$multiBoot" ] || [ "$multiBoot" == true ]
 then
     # show other operating systems in grub boot menu
     sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
 fi
 # install grub
-grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
+grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck
 # generate the grub config file
 grub-mkconfig -o /boot/grub/grub.cfg
 
