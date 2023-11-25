@@ -36,7 +36,7 @@ source ./variables.txt
 printf "\e[1;32m\nConfiguring reflector\n\e[0m"
 sleep 3
 # install reflector
-pacman -S --needed reflector
+pacman -S --needed --noconfirm reflector
 # run reflector
 reflector --country "$reflectorCode" --protocol https --latest 15 --sort rate --connection-timeout 60 --download-timeout 60 --save /etc/pacman.d/mirrorlist
 # configure reflector
@@ -52,7 +52,7 @@ printf "\e[1;32m\nConfiguring pacman\n\e[0m"
 sleep 3
 sed -i 's/#\[multilib\]/\[multilib\]/;/\[multilib\]/{n;s/#Include /Include /}' /etc/pacman.conf
 pacman -Syu
-pacman -S --needed pacman-contrib pacutils
+pacman -S --needed --noconfirm pacman-contrib pacutils
 
 
 # install microcode updates
@@ -60,7 +60,7 @@ if [ "$processorVendor" != null ]
 then
     printf "\e[1;32m\nInstalling microcode updates\n\e[0m"
     sleep 3
-    pacman -S --needed "$processorVendor"-ucode
+    pacman -S --needed --noconfirm "$processorVendor"-ucode
 fi
 
 
@@ -87,7 +87,7 @@ fi
 # install essential packages
 printf "\e[1;32m\nInstalling essential packages\n\e[0m"
 sleep 3
-pacman -S --needed bash base-devel coreutils efibootmgr git grub networkmanager os-prober sudo tmux vim xdg-utils
+pacman -S --needed --noconfirm bash base-devel coreutils efibootmgr git grub networkmanager os-prober sudo tmux vim xdg-utils
 
 
 
