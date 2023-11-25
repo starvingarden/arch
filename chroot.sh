@@ -227,7 +227,7 @@ sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # root=UUID=$decryptedrootUUID (this can be omitted?) (maybe include this for when using multiple disks?)
 # resume=UUID=$decryptedswapUUID (enables resuming from swap file hibernation) (maybe use resume=${decryptedswappartitionNames[0]})
 # sysctl.vm.swappiness=0 (sets swappiness on boot)
-sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$encryptedcontainerUUID=${encryptedcontainerNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
+sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$encryptedcontainerUUID=${encryptedcontainerNames[0]} root=/dev/${volumegroupNames[0]}/${rootNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
 if [ -z "$multiBoot" ] || [ "$multiBoot" == true ]
 then
     # show other operating systems in grub boot menu
