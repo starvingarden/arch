@@ -653,7 +653,7 @@ mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${volumegroupNam
 # update the system clock
 #########################
 
-printf "\e[1;32m\nUpdating Clock\n\e[0m"
+printf "\e[1;32m\nUpdating clock\n\e[0m"
 sleep 3
 timedatectl set-ntp true
 
