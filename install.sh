@@ -230,20 +230,20 @@ do
     if [ -z "$nvme" ]
     then
         efiPartitions+=("$element"1)
-        rootPartitions+=("$element"2)
+        cryptosPartitions+=("$element"2)
     else
         efiPartitions+=("$element"p1)
-        rootPartitions+=("$element"p2)
+        cryptosPartitions+=("$element"p2)
     fi
 done
 # efi partitions should be in the form of "sda1", "nvme0n1p1", etc.
-# root partitions should be in the form of "sda2", "nvme0n1p2", etc.
+# encrypted os partitions should be in the form of "sda2", "nvme0n1p2", etc.
 
 
-# set os partition names (used when creating os partitions)
+# set os partition names (used when creating os partitions and filesystems)
 # create empty arrays for os parition names
 efipartitionNames=()
-ospartitionNames=()
+cryptospartitionNames=()
 # set efi partition name(s)
 for element in "${!osDisks[@]}"
 do
@@ -253,11 +253,11 @@ done
 # set os partition name(s)
 for element in "${!osDisks[@]}"
 do
-    osPartition=(osdisk"$element"p2)
-    ospartitionNames+=("$rootPartition")
+    cryptosPartition=(osdisk"$element"p2)
+    cryptospartitionNames+=("$rootPartition")
 done
 # efi partition names should be in the form of "osdisk0p1", "osdisk1p1", etc.
-# os partition names should be in the form of "osdisk0p2", "osdisk1p2", etc.
+# encrypted os partition names should be in the form of "osdisk0p2", "osdisk1p2", etc.
 
 
 # set os encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
@@ -265,7 +265,7 @@ done
 osencryptedcontainerNames=()
 for element in "${!osDisks[@]}"
 do
-    osencryptedcontainerNames+=("$element")
+    osencryptedcontainerNames+=(cryptos"$element")
 done
 # os encrypted container names should be of the form "cryptos0", "cryptos1", etc.
 
