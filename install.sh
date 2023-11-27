@@ -521,7 +521,7 @@ sleep 3
 for element in "${!osDisks[@]}"
 do
     # encrypt root partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptosPartitions[$element]}"    # grub has limited support for luks2
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptosPartitions[$element]}"    # grub has limited support for luks2 (luks2 supports labels)
     # decrypt and name decrypted root partition(s) so it can be used
     echo -e "$encryptionPassword" | cryptsetup open /dev/"${cryptosPartitions[$element]}" "${osencryptedcontainerNames[$element]}"
 done
@@ -529,7 +529,7 @@ done
 for element in "${!dataPartitions[@]}"
 do
     # encrypt data partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptdataPartitions[$element]}"    # grub has limited support for luks2
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptdataPartitions[$element]}"    # grub has limited support for luks2 (luks2 supports labels)
     # decrypt and name decrypted data partition(s) so it can be used
     echo -e "$encryptionPassword" | cryptsetup open /dev/"${cryptdataPartitions[$element]}" "${dataencryptedcontainerNames[$element]}"
 done
