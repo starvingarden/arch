@@ -2,14 +2,10 @@
 
 # see arch wiki page "Installation guide#Partition the disks"
 # set keyboard variable and modify chroot script
-# configure raid when using a single disk so that additional disks can be added later
-# make logical volumes for each disk, then use btrfs raid 1 on each disk
 # set default values for variables
-# make rootPassword and encryptionPassword the same??
 # incorporate data disks and data subvolumes for installs without data disks
 # get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk1, etc.)
 # user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
-# change "lvm partitons" to "root partitions"
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
 # kpartx command to use disks that are already configured
 # each disk has its own physical volume, volume group, and logical volume(s). RAID is used via btrfs
