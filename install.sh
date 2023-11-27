@@ -304,7 +304,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, os partitions=${osPartitions[@]}, efi partition names=${efipartitionNames[@]}, os partition names=${ospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swapNames[@]} ${rootNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swapNames[@]} ${rootNames[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -384,9 +384,9 @@ do
     echo "efiPartitions+=($element)" >> ./variables.txt
 done
 
-for element in "${osPartitions[@]}"
+for element in "${cryptosPartitions[@]}"
 do
-    echo "osPartitions+=($element)" >> ./variables.txt
+    echo "cryptosPartitions+=($element)" >> ./variables.txt
 done
 
 for element in "${efipartitionNames[@]}"
@@ -394,9 +394,9 @@ do
     echo "efipartitionNames+=($element)" >> ./variables.txt
 done
 
-for element in "${ospartitionNames[@]}"
+for element in "${cryptospartitionNames[@]}"
 do
-    echo "ospartitionNames+=($element)" >> ./variables.txt
+    echo "cryptospartitionNames+=($element)" >> ./variables.txt
 done
 
 for element in "${osencryptedcontainerNames[@]}"
@@ -502,7 +502,7 @@ do
     # efi partition
     sgdisk --change-name=1:"${efipartitionNames[$element]}"
     # os partition
-    sgdisk --change-name=2:"${ospartitionNames[$element]}"
+    sgdisk --change-name=2:"${cryptospartitionNames[$element]}"
 done
 # create data partition(s)
 for element in "${!dataDisks[@]}"
@@ -511,10 +511,10 @@ do
     sgdisk --zap-all /dev/"${dataDisks[$element]}"
     # create partition #1 to the size of the entire disk
     sgdisk --new=1:0:0 /dev/"${dataDisks[$element]}"
-    # set partition #1 type to "Linux filesystem"
-    sgdisk --typecode=1:8300 /dev/"${dataDisks[$element]}"
+    # set partition #1 type to "Linux LUKS"
+    sgdisk --typecode=1:8309 /dev/"${dataDisks[$element]}"
     # set name for data partition
-    sgdisk --change-name=1:"${datapartitonNames[$element]}"
+    sgdisk --change-name=1:"${cryptdatapartitonNames[$element]}"
 done
 
 
@@ -525,17 +525,17 @@ sleep 3
 for element in "${!osDisks[@]}"
 do
     # encrypt root partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${osPartitions[$element]}"    # grub has limited support for luks2
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptosPartitions[$element]}"    # grub has limited support for luks2
     # decrypt and name decrypted root partition(s) so it can be used
-    echo -e "$encryptionPassword" | cryptsetup open /dev/"${osPartitions[$element]}" "${osencryptedcontainerNames[$element]}"
+    echo -e "$encryptionPassword" | cryptsetup open /dev/"${cryptosPartitions[$element]}" "${osencryptedcontainerNames[$element]}"
 done
 # set up encryption for data partition(s)
 for element in "${!dataPartitions[@]}"
 do
     # encrypt data partition(s)
-    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${dataPartitions[$element]}"    # grub has limited support for luks2
+    echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptdataPartitions[$element]}"    # grub has limited support for luks2
     # decrypt and name decrypted data partition(s) so it can be used
-    echo -e "$encryptionPassword" | cryptsetup open /dev/"${dataPartitions[$element]}" "${decrypteddatapartitionNames[$element]}"
+    echo -e "$encryptionPassword" | cryptsetup open /dev/"${cryptdataPartitions[$element]}" "${dataencryptedcontainerNames[$element]}"
 done
 
 
@@ -591,7 +591,10 @@ done
 # create root filesystem
 if [ "$osRaid" == false ]
 then
-    yes | mkfs.btrfs -L "${rootNames[0]}" -f -m dup -d single /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}"
+    for element in "${!osDisks[@]}"
+    do
+        yes | mkfs.btrfs -L "${rootNames[$element]}" -f -m dup -d single /dev/"${osvolgroupNames[$element]}"/"${rootNames[$element]}"
+    done
 fi
 if [ "$osRaid" == true ]
 then
@@ -601,7 +604,7 @@ then
     # set root filesystem paths
     for element in "${!osDisks[@]}"
     do
-        rootPaths+=(/dev/"${volumegroupNames[$element]}"/"${rootNames[$element]}")
+        rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootNames[$element]}")
     done
     yes | mkfs.btrfs -L rootraid -f -m raid1 -d raid1 "${rootPaths[@]}"
 fi
@@ -626,7 +629,7 @@ sleep 3
 # unmount partitions from /mnt
 umount -R /mnt
 # mount root subvolume to /mnt
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@ /dev/"${volumegroupNames[0]}"/"${rootNames[0]}" /mnt
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@ /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt
 # make directories to mount other partitions and subvolumes
 mkdir -p /mnt/efi
 mkdir -p /mnt/home
@@ -643,10 +646,10 @@ mount /dev/"${efiPartitions[0]}" /mnt/efi
 # mount swap filesystem
 #swapon /dev/"${volumegroupNames[0]}"/"${swapNames[0]}"
 # mount btrfs filesystem
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@home /dev/"${volumegroupNames[0]}"/"${rootNames[0]}" /mnt/home
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${volumegroupNames[0]}"/"${rootNames[0]}" /mnt/data
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@snapshots /dev/"${volumegroupNames[0]}"/"${rootNames[0]}" /mnt/.snapshots
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${volumegroupNames[0]}"/"${rootNames[0]}" /mnt/var
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@home /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/home
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/data
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@snapshots /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/.snapshots
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/var
 
 
 
