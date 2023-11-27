@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # see arch wiki page "Installation guide#Partition the disks"
-# set keyboard variable and modify chroot script
+# set keyboard variable and modify chroot script (/etc/vconsole.conf, etc.)
 # set default values for variables
 # incorporate data disks and data subvolumes for installs without data disks
 # get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk1, etc.)
