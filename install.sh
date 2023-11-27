@@ -250,7 +250,7 @@ done
 for element in "${!osDisks[@]}"
 do
     cryptosPartition=(osdisk"$element"p2)
-    cryptospartitionNames+=("$rootPartition")
+    cryptospartitionNames+=("$cryptosPartition")
 done
 # efi partition names should be in the form of "osdisk0p1", "osdisk1p1", etc.
 # encrypted os partition names should be in the form of "osdisk0p2", "osdisk1p2", etc.
