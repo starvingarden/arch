@@ -189,7 +189,7 @@ sed -i 's/BINARIES=()/BINARIES=(btrfs)/' /etc/mkinitcpio.conf
 # change hooks from udev to systemd
 # change the "udev" hook to the "systemd" hook (see arch wiki page "btrfs#Multi-device_file_system")
 sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf
-# remove the "consonefont" hook (see arch wiki page "dm-crypt/Encrypting an entire system#Encrypted boot partition (GRUB)")
+# remove the "consolefont" hook (see arch wiki page "dm-crypt/Encrypting an entire system#Encrypted boot partition (GRUB)")
 sed -i '/^HOOKS=/ s/consolefont //g' /etc/mkinitcpio.conf
 # change the "keymap" hook to the "sd-vconsole" hook (in /etc/vconsole.conf add the line "KEYMAP=us")
 sed -i '/^HOOKS=/ s/keymap/sd-vconsole/' /etc/mkinitcpio.conf
@@ -210,7 +210,7 @@ mkinitcpio -P
 # get first decrypted swap partition uuid
 #decryptedswapUUID=$(blkid -s UUID -o value "${decryptedswapPartitions[0]}")
 # get first encrypted root partition uuid
-rootpartitionUUID=$(blkid -s UUID -o value /dev/"${rootPartitions[0]}")
+cryptospartitionUUID=$(blkid -s UUID -o value /dev/"${cryptosPartitions[0]}")
 # get first decrypted swap partition uuid
 #decryptedrootUUID=$(blkid -s UUID -o value "${decryptedrootPartitions[0]}")
 
@@ -231,7 +231,7 @@ sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # root=UUID=$decryptedrootUUID (this can be omitted?) (maybe include this for when using multiple disks?)
 # resume=UUID=$decryptedswapUUID (enables resuming from swap file hibernation) (maybe use resume=${decryptedswappartitionNames[0]})
 # sysctl.vm.swappiness=0 (sets swappiness on boot)
-sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$rootpartitionUUID=${encryptedcontainerNames[0]} root=/dev/${volumegroupNames[0]}/${rootNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
+sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$cryptospartitionUUID=${osencryptedcontainerNames[0]} root=/dev/${osvolgroupNames[0]}/${rootNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
 if [ -z "$multiBoot" ] || [ "$multiBoot" == true ]
 then
     # show other operating systems in grub boot menu
