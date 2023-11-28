@@ -145,9 +145,9 @@ dd bs=512 count=4 if=/dev/random of=/root/crypt-keys/crypt-key.keyfile iflag=ful
 chmod 000 /root/crypt-keys/crypt-key.keyfile
 # add keyfile as a LUKS key to encrypted partitions
 # add keyfile as a LUKS key to encrypted os partitions
-for element in "${cryptosPartitions[@]}"
+for element in "${!cryptosPartitions[@]}"
 do
-    echo -e "$encryptionPassword" | cryptsetup luksAddKey /dev/"${cryptosPartitions[@]}" /root/crypt-keys/crypt-key.keyfile
+    echo -e "$encryptionPassword" | cryptsetup luksAddKey /dev/"${cryptosPartitions[$element]}" /root/crypt-keys/crypt-key.keyfile
 done
 # add keyfile as a LUKS key to encrypted data partitions
 
