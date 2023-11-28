@@ -496,9 +496,14 @@ do
     sgdisk --typecode=2:8309 /dev/"${osDisks[$element]}"
     # set names for os partitions
     # efi partition
-    sgdisk --change-name=1:"${efipartitionNames[$element]}"
+    #sgdisk --change-name=1:"${efipartitionNames[$element]}"
     # os partition
-    sgdisk --change-name=2:"${cryptospartitionNames[$element]}"
+    #sgdisk --change-name=2:"${cryptospartitionNames[$element]}"
+    # set names for os partitions
+    # efi partition
+    sgdisk --change-name=1:"${efipartitionNames[$element]}" /dev/"${osDisks[$element]}"
+    # os partition
+    sgdisk --change-name=2:"${cryptospartitionNames[$element]}" /dev/"${osDisks[$element]}"
 done
 # create data partition(s)
 for element in "${!dataDisks[@]}"
