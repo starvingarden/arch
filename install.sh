@@ -9,7 +9,7 @@
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
 # kpartx command to use disks that are already configured
 # each disk has its own physical volume, volume group, and logical volume(s). RAID is used via btrfs
-# use persistent block device naming
+# use persistent block device naming for initramfs and grub configuration
 
 ######################################################
 # YOU MUST SET ALL OF THESE VARIABLES UNLESS SPECIFIED
