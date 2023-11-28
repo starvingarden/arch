@@ -138,22 +138,22 @@ sed -i 's/#MAKEFLAGS=\"-j[0-9]*\"/MAKEFLAGS=\"-j$(nproc)\"/g' /etc/makepkg.conf
 
 # generate a keyfile to decrypt swap and root partitions so that grub can decrypt them automatically on boot (see the following arch wiki pages)
 # dm-crypt/Device encryption#Keyfiles
-#printf "\e[1;32m\nGenerating key file for encrypted partitions\n\e[0m"
-#sleep 3
-#mkdir /.crypt-keys
-#chmod 600 /.crypt-keys
-#dd bs=512 count=4 if=/dev/random of=/.crypt-keys/crypt-key.bin iflag=fullblock
-#chmod 600 /.crypt-keys/crypt-key.bin
-# add keyfile to swap partition(s)
-#for element in "${swapPartitions[@]}"
-#do
-#    echo -e "$encryptionPassword" | cryptsetup luksAddKey "${swapPartitions[@]}" /.crypt-keys/crypt-key.bin
-#done
-# add keyfile to root partition(s)
-#for element in "${rootPartitions[@]}"
-#do
-#    echo -e "$encryptionPassword" | cryptsetup luksAddKey "${rootPartitions[@]}" /.crypt-keys/crypt-key.bin
-#done
+printf "\e[1;32m\nGenerating key file for encrypted partitions\n\e[0m"
+sleep 3
+# create directory to hold key file
+mkdir /root/crypt-keys
+# give directory appropriate permissions
+chmod 000 /root/crypt-keys
+# create key file
+dd bs=512 count=4 if=/dev/random of=/root/crypt-keys/crypt-key.keyfile iflag=fullblock
+chmod 000 /root/crypt-keys/crypt-key.keyfile
+# add keyfile as a LUKS key to encrypted partitions
+# add keyfile as a LUKS key to encrypted os partitions
+for element in "${cryptosPartitions[@]}"
+do
+    echo -e "$encryptionPassword" | cryptsetup luksAddKey /dev/"${cryptosPartitions[@]}" /root/crypt-keys/crypt-key.keyfile
+done
+# add keyfile as a LUKS key to encrypted data partitions
 
 
 # configure mkinitcpio.conf (see the following arch wiki pages)
@@ -186,6 +186,8 @@ printf "\e[1;32m\nConfiguring initcpio\n\e[0m"
 sleep 3
 # add btrfs into binaries so that btrfs-check will work (see arch wiki page "btrfs#Troubleshooting")
 sed -i 's/BINARIES=()/BINARIES=(btrfs)/' /etc/mkinitcpio.conf
+# add the keyfile to files to embed the keyfile in the initramfs and unlock the root partition(s) on boot (see arch wiki page "dm-crypt/Device encryption#Unlocking the root partition at boot")
+sed -i 's|FILES=()|FILES=(/root/crypt-keys/crypt-key.keyfile)|' /etc/mkinitcpio.conf
 # change hooks from udev to systemd
 # change the "udev" hook to the "systemd" hook (see arch wiki page "btrfs#Multi-device_file_system")
 sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf
@@ -193,6 +195,8 @@ sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf
 sed -i '/^HOOKS=/ s/consolefont //g' /etc/mkinitcpio.conf
 # change the "keymap" hook to the "sd-vconsole" hook (in /etc/vconsole.conf add the line "KEYMAP=us")
 sed -i '/^HOOKS=/ s/keymap/sd-vconsole/' /etc/mkinitcpio.conf
+# add the line "KEYMAP=us" to /etc/vconsole.conf
+echo -e "KEYMAP=us" > /etc/vconsole.conf
 # add the sd-encrypt and lvm2 hooks before the filesystems hook for encryption support (see examples at /etc/mkinitcpio.conf, and arch wiki pages "dm-crypt/System configuration#mkinitcpio" and "dm-crypt/Encrypting an entire system#LVM on LUKS")
 sed -i '/^HOOKS=/ s/filesystems/sd-encrypt lvm2 &/g' /etc/mkinitcpio.conf
 # move the keyboard hook to before the autodetect hook (see arch wiki page "dm-crypt/System configuration")
@@ -202,17 +206,13 @@ sed -i '/^HOOKS=/ s/autodetect/keyboard &/g' /etc/mkinitcpio.conf
 sed -i '/^HOOKS=/ s/filesystems/& resume/g' /etc/mkinitcpio.conf
 # regenerate the intramfs
 mkinitcpio -P
+# secure the keyfile embedded in the initramfs
+chmod 600 /boot/initramfs-linux
 
 
 # get kernel parameter variables for grub
-# get first encrypted swap partition uuid
-#encryptedswapUUID=$(blkid -s UUID -o value "${swapPartitions[0]}")
-# get first decrypted swap partition uuid
-#decryptedswapUUID=$(blkid -s UUID -o value "${decryptedswapPartitions[0]}")
-# get first encrypted root partition uuid
+# get first encrypted os partition uuid
 cryptospartitionUUID=$(blkid -s UUID -o value /dev/"${cryptosPartitions[0]}")
-# get first decrypted swap partition uuid
-#decryptedrootUUID=$(blkid -s UUID -o value "${decryptedrootPartitions[0]}")
 
 
 # configure grub (see the following arch wiki pages)
@@ -227,11 +227,12 @@ sed -i 's/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT=3/' /etc/default/grub
 # enable booting from encrypted devices
 sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # add the following kernel parameters
-# rd.luks.name=$encryptedlvmUUID=${encryptedcontainerNames[0]} (specifies unlocking and naming of the root partition on boot)
-# root=UUID=$decryptedrootUUID (this can be omitted?) (maybe include this for when using multiple disks?)
+# rd.luks.name=$cryptosPartitionUUID=${encryptedcontainerNames[0]} (specifies unlocking and naming of the root partition on boot)
+# rd.luks.key=$cryptosPartitionUUID=/root/crypt-keys/crypt-key.keyfile
+# root=/dev/${osvolgroupNames[0]}/${rootNames[0]}
 # resume=UUID=$decryptedswapUUID (enables resuming from swap file hibernation) (maybe use resume=${decryptedswappartitionNames[0]})
 # sysctl.vm.swappiness=0 (sets swappiness on boot)
-sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$cryptospartitionUUID=${osencryptedcontainerNames[0]} root=/dev/${osvolgroupNames[0]}/${rootNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
+sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$cryptospartitionUUID=${osencryptedcontainerNames[0]} rd.luks.key=$cryptosPartitionUUID=/root/crypt-keys/crypt-key.keyfile root=/dev/${osvolgroupNames[0]}/${rootNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
 if [ -z "$multiBoot" ] || [ "$multiBoot" == true ]
 then
     # show other operating systems in grub boot menu
