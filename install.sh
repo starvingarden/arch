@@ -496,11 +496,6 @@ do
     sgdisk --typecode=2:8309 /dev/"${osDisks[$element]}"
     # set names for os partitions
     # efi partition
-    #sgdisk --change-name=1:"${efipartitionNames[$element]}"
-    # os partition
-    #sgdisk --change-name=2:"${cryptospartitionNames[$element]}"
-    # set names for os partitions
-    # efi partition
     sgdisk --change-name=1:"${efipartitionNames[$element]}" /dev/"${osDisks[$element]}"
     # os partition
     sgdisk --change-name=2:"${cryptospartitionNames[$element]}" /dev/"${osDisks[$element]}"
@@ -515,7 +510,7 @@ do
     # set partition #1 type to "Linux LUKS"
     sgdisk --typecode=1:8309 /dev/"${dataDisks[$element]}"
     # set name for data partition
-    sgdisk --change-name=1:"${cryptdatapartitonNames[$element]}"
+    sgdisk --change-name=1:"${cryptdatapartitonNames[$element]}" /dev/"${dataDisks[$element]}"
 done
 
 
