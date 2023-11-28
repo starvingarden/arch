@@ -536,27 +536,6 @@ done
 
 
 # create logical volumes
-#printf "\e[1;32m\nCreating logical volumes\n\e[0m"
-#sleep 3
-# create physical volume(s)
-#for element in "${encryptedcontainerNames[@]}"
-#do
-#    pvcreate /dev/mapper/"$element"
-#done
-# create volume group(s)
-#for element in "${!encryptedcontainerNames[@]}"
-#do
-#    vgcreate "${volumegroupNames[$element]}" /dev/mapper/"${encryptedcontainerNames[$element]}"
-#done
-# create logical volumes
-#for element in "${!rootpartitionNames[@]}"
-#do
-#    lvcreate -L "$ramSize" "${volumegroupNames[$element]}" -n "${swapNames[$element]}"
-#    lvcreate -l 100%FREE "${volumegroupNames[$element]}" -n "${rootNames[$element]}"
-#done
-
-
-# create logical volumes
 printf "\e[1;32m\nCreating logical volumes\n\e[0m"
 sleep 3
 for element in "${!osDisks[@]}"
@@ -580,10 +559,10 @@ do
     yes | mkfs.fat -F 32 -n "${efipartitionNames[$element]}" /dev/"${efiPartitions[$element]}"
 done
 # create swap filesystem(s)
-#for element in "${!swapNames[$element]}"
-#do
-#    mkswap -L "${swapNames[$element]}" /dev/"${volumegroupNames[$element]}"/"${swapNames[$element]}"
-#done
+for element in "${!osDisks[$element]}"
+do
+    mkswap -L "${swapNames[$element]}" /dev/"${osvolgroupNames[$element]}"/"${swapNames[$element]}"
+done
 # create root filesystem
 if [ "$osRaid" == false ]
 then
@@ -640,7 +619,7 @@ sleep 3
 # mount efi filesystem
 mount /dev/"${efiPartitions[0]}" /mnt/efi
 # mount swap filesystem
-#swapon /dev/"${volumegroupNames[0]}"/"${swapNames[0]}"
+swapon /dev/"${osvolgroupNames[0]}"/"${swapNames[0]}"
 # mount btrfs filesystem
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@home /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/home
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/data
