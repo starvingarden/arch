@@ -203,7 +203,7 @@ sed -i '/^HOOKS=/ s/filesystems/& resume/g' /etc/mkinitcpio.conf
 # regenerate the intramfs
 mkinitcpio -P
 # secure the keyfile embedded in the initramfs
-chmod 600 /boot/initramfs-linux
+chmod 600 /boot/initramfs-linux*
 
 
 # get kernel parameter variables for grub
