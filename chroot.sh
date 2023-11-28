@@ -37,16 +37,12 @@ printf "\e[1;32m\nConfiguring reflector\n\e[0m"
 sleep 3
 # install reflector
 pacman -S --needed --noconfirm reflector
-# run reflector
-#reflector --country "$reflectorCode" --protocol https --latest 15 --sort rate --connection-timeout 60 --download-timeout 60 --save /etc/pacman.d/mirrorlist
 # configure reflector
 echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--latest [[:graph:]]*/--latest 15/' /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--sort [[:graph:]]*/--sort rate/' /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--protocol [[:graph:]]*/--protocol https/' /etc/xdg/reflector/reflector.conf
 systemctl enable reflector.timer
-# run reflector
-systemctl start reflector.service
 
 
 # configure pacman
