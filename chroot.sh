@@ -226,9 +226,9 @@ sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # rd.luks.name=$cryptosPartitionUUID=${encryptedcontainerNames[0]} (specifies unlocking and naming of the root partition on boot)
 # rd.luks.key=$cryptosPartitionUUID=/root/crypt-keys/crypt-key.keyfile
 # root=/dev/${osvolgroupNames[0]}/${rootNames[0]}
-# resume=UUID=$cryptospartitionUUID (enables resuming from swap file hibernation) (maybe use resume=${decryptedswappartitionNames[0]})
+# resume=/dev/${osvolgroupNames[0]}/${swapNames[0]} (enables resuming from swap hibernation)
 # sysctl.vm.swappiness=0 (sets swappiness on boot)
-sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$cryptospartitionUUID=${osencryptedcontainerNames[0]} rd.luks.key=$cryptosPartitionUUID=/root/crypt-keys/crypt-key.keyfile root=/dev/${osvolgroupNames[0]}/${rootNames[0]} resume=UUID=$cryptospartitionUUID sysctl.vm.swappiness=0 |" /etc/default/grub
+sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$cryptospartitionUUID=${osencryptedcontainerNames[0]} rd.luks.key=$cryptosPartitionUUID=/root/crypt-keys/crypt-key.keyfile root=/dev/${osvolgroupNames[0]}/${rootNames[0]} resume=/dev/${osvolgroupNames[0]}/${swapNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
 if [ -z "$multiBoot" ] || [ "$multiBoot" == true ]
 then
     # show other operating systems in grub boot menu
