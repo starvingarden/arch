@@ -212,9 +212,8 @@ cryptospartitionUUID=$(blkid -s UUID -o value /dev/"${cryptosPartitions[0]}")
 
 
 # configure grub (see the following arch wiki pages)
-# dm-crypt/Encrypting an entire system#Luks on a partition
-# dm-crypt/System_configuration
-# GRUB#Encrypted /boot
+# dm-crypt/Encrypting an entire system
+# dm-crypt/Swap encryption
 printf "\e[1;32m\nConfiguring grub\n\e[0m"
 sleep 3
 # edit /etc/default/grub
@@ -238,6 +237,13 @@ fi
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck
 # generate the grub config file
 grub-mkconfig -o /boot/grub/grub.cfg
+
+
+# fully allocate swap logical volume(s) (see arch wiki page "Dm-crypt/Swap encryption")
+for element in "${!osDisks[@]}"
+do
+    dd if=/dev/zero of=/dev/"${osvolgroupNames[$element]}"/"${swapNames[$element]}" bs=1M status=progress
+done
 
 
 # configure users
