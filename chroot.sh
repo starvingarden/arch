@@ -199,7 +199,7 @@ sed -i '/^HOOKS=/ s/filesystems/sd-encrypt lvm2 &/g' /etc/mkinitcpio.conf
 sed -i '/^HOOKS=/ s/keyboard //g' /etc/mkinitcpio.conf
 sed -i '/^HOOKS=/ s/autodetect/keyboard &/g' /etc/mkinitcpio.conf
 # add resume hooks after the filesystem hook for swap hibernation support (see arch wiki page "dm_crypt/Swap encryption")
-sed -i '/^HOOKS=/ s/filesystems/& resume/g' /etc/mkinitcpio.conf
+#sed -i '/^HOOKS=/ s/filesystems/& resume/g' /etc/mkinitcpio.conf
 # regenerate the intramfs
 mkinitcpio -P
 # secure the keyfile embedded in the initramfs
