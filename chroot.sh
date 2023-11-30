@@ -240,13 +240,13 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # fully allocate swap logical volume(s) (see arch wiki page "Dm-crypt/Swap encryption")
-printf "\e[1;32m\nFull allocating swap logical volume(s)\n\e[0m"
-sleep 3
-swapoff -a
-for element in "${!osDisks[@]}"
-do
-    dd if=/dev/zero of=/dev/"${osvolgroupNames[$element]}"/"${swapNames[$element]}" bs=1M status=progress
-done
+#printf "\e[1;32m\nFully allocating swap logical volume(s)\n\e[0m"
+#sleep 3
+#swapoff -a
+#for element in "${!osDisks[@]}"
+#do
+#    dd if=/dev/zero of=/dev/"${osvolgroupNames[$element]}"/"${swapNames[$element]}" bs=1M status=progress
+#done
 
 
 # configure users
