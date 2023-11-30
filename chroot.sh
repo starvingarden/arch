@@ -111,6 +111,10 @@ locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 
+# set the keymap
+echo -e "KEYMAP=$keyMap" > /etc/vconsole.conf
+
+
 # set the hostname
 echo -e "$hostName" >> /etc/hostname
 
@@ -154,30 +158,6 @@ done
 
 # configure mkinitcpio.conf (see the following arch wiki pages)
 # dm-crypt/Encrypting an entire system#LUKS on a partition
-#printf "\e[1;32m\nConfiguring initcpio\n\e[0m"
-#sleep 3
-# add btrfs into binaries so that btrfs-check will work (see arch wiki page "btrfs#Troubleshooting")
-#sed -i 's/BINARIES=()/BINARIES=(btrfs)/' /etc/mkinitcpio.conf
-# add the keyfile to files to embed the keyfile in the initramfs and unlock the root partition(s) on boot (see arch wiki page "dm-crypt/Device encryption#Unlocking the root partition at boot")
-#sed -i 's/FILES=()/FILES=(\/.crypt-keys\/crypt-key.bin)/' /etc/mkinitcpio.conf
-# change hooks from udev to systemd
-# change the "udev" hook to the "systemd" hook (see arch wiki page "btrfs#Multi-device_file_system")
-#sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf
-# change the "keymap" hook to the "sd-vconsole" hook (in /etc/vconsole.conf add the line "KEYMAP=us")
-#sed -i '/^HOOKS=/ s/keymap/sd-vconsole/' /etc/mkinitcpio.conf
-# add the sd-encrypt hook before the filesystems hook for encryption support (see examples at /etc/mkinitcpio.conf, and arch wiki page "dm-crypt/System configuration#mkinitcpio")
-#sed -i '/^HOOKS=/ s/filesystems/sd-encrypt &/g' /etc/mkinitcpio.conf
-# move the keyboard hook to before the autodetect hook (see arch wiki page "dm-crypt/System configuration")
-#sed -i '/^HOOKS=/ s/keyboard //g' /etc/mkinitcpio.conf
-#sed -i '/^HOOKS=/ s/autodetect/keyboard &/g' /etc/mkinitcpio.conf
-# add resume hooks after the filesystem hook for swap hibernation support (see arch wiki page "dm_crypt/Swap encryption")
-#sed -i '/^HOOKS=/ s/filesystems/& resume/g' /etc/mkinitcpio.conf
-# regenerate the intramfs
-#mkinitcpio -P
-
-
-# configure mkinitcpio.conf (see the following arch wiki pages)
-# dm-crypt/Encrypting an entire system#LUKS on a partition
 printf "\e[1;32m\nConfiguring initcpio\n\e[0m"
 sleep 3
 # add btrfs into binaries so that btrfs-check will work (see arch wiki page "btrfs#Troubleshooting")
@@ -191,15 +171,12 @@ sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf
 sed -i '/^HOOKS=/ s/consolefont //g' /etc/mkinitcpio.conf
 # change the "keymap" hook to the "sd-vconsole" hook (in /etc/vconsole.conf add the line "KEYMAP=us")
 sed -i '/^HOOKS=/ s/keymap/sd-vconsole/' /etc/mkinitcpio.conf
-# add the line "KEYMAP=us" to /etc/vconsole.conf
-echo -e "KEYMAP=us" > /etc/vconsole.conf
+# add/move additional hooks
 # add the sd-encrypt and lvm2 hooks before the filesystems hook for encryption support (see arch wiki pages "dm-crypt/System configuration#mkinitcpio" and "dm-crypt/Encrypting an entire system#LVM on LUKS")
 sed -i '/^HOOKS=/ s/filesystems/sd-encrypt lvm2 &/g' /etc/mkinitcpio.conf
 # move the keyboard hook to before the autodetect hook (see arch wiki page "dm-crypt/System configuration")
 sed -i '/^HOOKS=/ s/keyboard //g' /etc/mkinitcpio.conf
 sed -i '/^HOOKS=/ s/autodetect/keyboard &/g' /etc/mkinitcpio.conf
-# add resume hooks after the filesystem hook for swap hibernation support (see arch wiki page "dm_crypt/Swap encryption")
-#sed -i '/^HOOKS=/ s/filesystems/& resume/g' /etc/mkinitcpio.conf
 # regenerate the intramfs
 mkinitcpio -P
 # secure the keyfile embedded in the initramfs
@@ -237,16 +214,6 @@ fi
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB --recheck
 # generate the grub config file
 grub-mkconfig -o /boot/grub/grub.cfg
-
-
-# fully allocate swap logical volume(s) (see arch wiki page "Dm-crypt/Swap encryption")
-#printf "\e[1;32m\nFully allocating swap logical volume(s)\n\e[0m"
-#sleep 3
-#swapoff -a
-#for element in "${!osDisks[@]}"
-#do
-#    dd if=/dev/zero of=/dev/"${osvolgroupNames[$element]}"/"${swapNames[$element]}" bs=1M status=progress
-#done
 
 
 # configure users
