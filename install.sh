@@ -11,91 +11,109 @@
 # each disk has its own physical volume, volume group, and logical volume(s). RAID is used via btrfs
 # use persistent block device naming for initramfs and grub configuration
 
-######################################################
-# YOU MUST SET ALL OF THESE VARIABLES UNLESS SPECIFIED
-######################################################
-
-#####################################################
-# ALL VARIABLES MUST BE ENCLOSED INSIDE DOUBLE QUOTES
-#####################################################
 
 
 
 
+#######################
+# IMPORTANT INFORMATION
+#######################
 
-hostName="arch"
+# You must set all of these variables unless using the default value
+# To use the default value for a variable, leave it blank
+# Not all variables have a default value, these variables cannot be left blank
+# All variables must be enclosed inside double quotes
+
+
+
+
+
+hostName=""
     # this is the device name
+    # default value = "arch"
     # example: hostName="arch"
 
-userName="johndoe"
+userName=""
     # this is your user name
-    # example: userName="john"
+    # default value = "johndoe"
+    # example: userName="johndoe"
 
-userPassword="password"
+userPassword=""
     # this is your user password
-    # example: userPassword="abc123"
+    # default value = "password"
+    # example: userPassword="password"
 
-rootPassword="password"
-    # this is the root (administrator) password
-    # example: rootPassword="abc123"
+rootPassword=""
+    # this is the root password
+    # default value = "password"
+    # example: rootPassword="password"
 
-encryptionPassword="password"
+encryptionPassword=""
     # this is the password to be used for disk encryption
-    # example: encryptionPassword="abc123"
+    # default value = "password"
+    # example: encryptionPassword="password"
 
-osDisks="vda"
+osDisks=""
     # this is a list of space separated disks to use for the operating system
     # you must use 1 or 2 disks
-    # if you use 2 disks, raid will automatically be applied to the operating system
+    # if you use 2 disks, RAID will automatically be applied to the operating system disks
     # run "fdisk -l" to list available disks
+    # NO DEFAULT VALUE
     # example: osDisks="sda nvme0n1"
 
 dataDisks=""
     # this is a list of space separated disks to use for bulk storage
-    # leave blank if you don't want to use any disks for bulk storage
     # you can use as many disks as you like
     # you cannot use any disks that will be used for the operating system (osDisks)
     # run "fdisk -l" to list available disks
+    # default value = ""
     # example: dataDisks="sdb nvme1n1"
 
 dataRaid=""
     # this determines if raid will be used for bulk storage disks
-    # if using a singe data disk and you want to use raid later with another disk, enable this option
-    # to enable, either leave blank or set to "true"
-    # to disable, set to "false"
+    # set to "true" or "false"
+    # default value = "true"
     # example: dataRaid="true"
 
 diskWipe=""
     # this determines if disks will be securely wiped before proceeding
-    # to enable, set to "true"
-    # to disable, either leave blank or set to "false"
+    # set to "true" or "false"
     # this can take a long time
+    # default value = "false"
     # example: diskWipe="true"
 
-timeZone="US/Central"
+timeZone=""
     # this sets the time zone
     # run "timedatectl list-timezones" to list available timezones
+    # default value = "US/Central"
     # example: timeZone="US/Central"
 
-reflectorCode="US"
+keyMap=""
+    # this sets the keymap for your keyboard
+    # run "localectl list-keymaps" to list available keymaps
+    # default value = "us"
+    # example: keyMap="us"
+
+reflectorCode=""
     # this sets the country to download packages from
     # must set to 2 capital letters
     # run "reflector --list-countries" to list available countries and their codes
+    # default value = "US"
     # example: reflectorCode="US"
 
 multiBoot=""
     # this determines if the bootloader will check for other operating systems
-    # to enable, either leave blank or set to "true"
-    # do disable, set to "false"
+    # set to either "true" or "false"
     # enable if you have already, or plan to dual boot on another disk
     # enable if you are unsure, (this setting has very little effect)
+    # default value = "true"
     # example: multiBoot="true"
 
 customConfig=""
-    # this determines if my own personal config files and settings will be used
-    # to enable, set to "true"
-    # to disable, either leave blank or set to "false"
+    # this determines if the repo owner's personal config files and settings will be used
     # for details on what this includes, see the "custom configurations" section in the config.sh script
+    # set to either "true" or "false"
+    # default value = "true"
     # example: customConfig="true"
 
 
@@ -107,6 +125,76 @@ customConfig=""
 #############################
 
 
+
+
+
+
+
+
+
+
+# set default values for appropriate variables
+##############################################
+
+if [ -z "$hostName" ]
+then
+    hostName=arch
+fi
+
+if [ -z "$userName" ]
+then
+    userName=johndoe
+fi
+
+if [ -z "$userPassword" ]
+then
+    userPassword=password
+fi
+
+if [ -z "$rootPassword" ]
+then
+    rootPassword=password
+fi
+
+if [ -z "$encryptionPassword" ]
+then
+    encryptionPassword=password
+fi
+
+if [ -z "$dataRaid" ]
+then
+    dataRaid=true
+fi
+
+if [ -z "$diskWipe" ]
+then
+    diskWipe=false
+fi
+
+if [ -z "$timeZone" ]
+then
+    timeZone=US/Central
+fi
+
+if [ -z "$keyMap" ]
+then
+    keyMap=us
+fi
+
+if [ -z "$reflectorCode" ]
+then
+    reflectorCode=US
+fi
+
+if [ -z "$multiBoot" ]
+then
+    multiBoot=true
+fi
+
+if [ -z "$customConfig" ]
+then
+    customConfig=true
+fi
 
 
 
@@ -360,6 +448,7 @@ echo -e "encryptionPassword=$encryptionPassword" >> ./variables.txt
 echo -e "dataRaid=$dataRaid" >> ./variables.txt
 echo -e "diskWipe=$diskWipe" >> ./variables.txt
 echo -e "timeZone=$timeZone" >> ./variables.txt
+echo -e "keyMap=$keyMap" >> ./variables.txt
 echo -e "reflectorCode=$reflectorCode" >> ./variables.txt
 echo -e "multiBoot=$multiBoot" >> ./variables.txt
 echo -e "customConfig=$customConfig" >> ./variables.txt
