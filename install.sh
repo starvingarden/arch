@@ -1,15 +1,17 @@
 #!/bin/bash
 
-# see arch wiki page "Installation guide#Partition the disks"
-# set keyboard variable and modify chroot script (/etc/vconsole.conf, etc.)
-# set default values for variables
-# incorporate data disks and data subvolumes for installs without data disks
-# get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk1, etc.)
-# user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
+############
+# need to do
+############
+
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
-# kpartx command to use disks that are already configured
+# get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk1, etc.)
 # each disk has its own physical volume, volume group, and logical volume(s). RAID is used via btrfs
+# user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
+# incorporate data disks and data subvolumes for installs without data disks
+# kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
+# better describe how variables will be used
 
 
 
@@ -71,6 +73,7 @@ dataDisks=""
 
 dataRaid=""
     # this determines if raid will be used for bulk storage disks
+    # you must be using an even number of data disks (dataDisks)
     # set to "true" or "false"
     # default value = "true"
     # example: dataRaid="true"
