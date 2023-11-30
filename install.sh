@@ -387,6 +387,84 @@ done
 
 
 
+
+
+
+
+# set encrypted data partition(s) (used when creating and mounting filesystems)
+# create an empty array for encrypted data partitions
+cryptdataPartitions=()
+# set encrypted data partitions
+for element in "${dataDisks[@]}"
+do
+    # check if disk is an nvme
+    nvme=$(echo "$element" | grep -io 'nvme')
+    if [ -z "$nvme" ]
+    then
+        cryptdataPartitions+=("$element"1)
+    else
+        cryptdataPartitions+=("$element"p1)
+    fi
+done
+# encrypted data partitions should be in the form of "sda1", "nvme0n1p1", etc.
+
+
+# set encrypted data partition names (used when creating data partitions and filesystems)
+# create an empty arrays for data parition names
+cryptdatapartitionNames=()
+# set data partition name(s)
+for element in "${!dataDisks[@]}"
+do
+    cryptdataPartition=(datadisk"$element"p1)
+    cryptdatapartitionNames+=("$cryptdataPartition")
+done
+# encrypted data partition names should be in the form of "osdisk0p1", "osdisk1p1", etc.
+
+
+# set data encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
+# create empty array for data encrypted container names
+dataencryptedcontainerNames=()
+for element in "${!dataDisks[@]}"
+do
+    dataencryptedcontainerNames+=(cryptdata"$element")
+done
+# data encrypted container names should be of the form "cryptdata0", "cryptdata1", etc.
+
+
+# set data volume group name(s)
+# create empty array for data volume group names
+datavolgroupNames=()
+for element in "${!dataDisks[@]}"
+do
+    datavolgroupNames+=(datavolgroup"$element")
+done
+# data volume group names should be in the form of "datavolgroup0", "datavolgroup1", etc.
+
+
+# set data logical volume names
+# create empty arrays for data logical volume names
+dataNames=()
+for element in "${!dataDisks[@]}"
+do
+    dataNames+=(data"$element")
+done
+# data logical volume names should be in the form of "swap0", "swap1", "root0", "root1", etc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # verify variables for system information are correct
 #echo -e "\n\n"
 while true
