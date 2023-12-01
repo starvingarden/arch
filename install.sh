@@ -11,7 +11,7 @@
 # incorporate data disks and data subvolumes for installs without data disks
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
-# better describe how variables will be used
+# create a variable to name filesystems instead of using $ospartitionNames and os logical volume names
 
 
 
@@ -305,7 +305,7 @@ else
 fi
 
 
-# set os partition(s) (used when creating and mounting filesystems)
+# set os partition(s)
 # create empty arrays for os partitions
 efiPartitions=()
 cryptosPartitions=()
@@ -327,7 +327,8 @@ done
 # encrypted os partitions should be in the form of "sda2", "nvme0n1p2", etc.
 
 
-# set os partition names (used when creating os partitions and filesystems)
+# set os partition names
+# used to name partitions, $efipartitionNames is also used to name the efi filesystem(s)
 # create empty arrays for os parition names
 efipartitionNames=()
 cryptospartitionNames=()
@@ -347,7 +348,8 @@ done
 # encrypted os partition names should be in the form of "osdisk0p2", "osdisk1p2", etc.
 
 
-# set os encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
+# set os encrypted container name(s)
+# used to name os encrypted containers
 # create empty array for os encrypted container names
 osencryptedcontainerNames=()
 for element in "${!osDisks[@]}"
@@ -358,6 +360,7 @@ done
 
 
 # set os volume group name(s)
+# used to name os volume groups
 # create empty array for os volume group names
 osvolgroupNames=()
 for element in "${!osDisks[@]}"
@@ -368,6 +371,7 @@ done
 
 
 # set os logical volume names
+# used to name logical volumes and filesystems (os btrfs RAID filesystems are named "rootraid")
 # create empty arrays for os logical volume names
 swapNames=()
 rootNames=()
