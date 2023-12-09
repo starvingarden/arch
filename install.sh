@@ -328,7 +328,7 @@ done
 
 
 # set os partition names
-# used to name partitions
+# used to name os partitions
 # create empty arrays for os parition names
 efipartitionNames=()
 cryptospartitionNames=()
@@ -338,7 +338,7 @@ do
     efiPartition=(osdisk"$element"p1)
     efipartitionNames+=("$efiPartition")
 done
-# set os partition name(s)
+# set encrypted os partition name(s)
 for element in "${!osDisks[@]}"
 do
     cryptosPartition=(osdisk"$element"p2)
@@ -419,7 +419,7 @@ done
 
 
 
-# set encrypted data partition(s) (used when creating and mounting filesystems)
+# set encrypted data partition(s)
 # create an empty array for encrypted data partitions
 cryptdataPartitions=()
 # set encrypted data partitions
@@ -437,8 +437,9 @@ done
 # encrypted data partitions should be in the form of "sda1", "nvme0n1p1", etc.
 
 
-# set encrypted data partition names (used when creating data partitions and filesystems)
-# create an empty arrays for data parition names
+# set encrypted data partition names
+# used to name encrypted data partitions
+# create an empty arrays for encrypted data parition names
 cryptdatapartitionNames=()
 # set data partition name(s)
 for element in "${!dataDisks[@]}"
