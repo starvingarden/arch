@@ -328,7 +328,7 @@ done
 
 
 # set os partition names
-# used to name partitions, $efipartitionNames is also used to name the efi filesystem(s)
+# used to name partitions
 # create empty arrays for os parition names
 efipartitionNames=()
 cryptospartitionNames=()
@@ -371,7 +371,7 @@ done
 
 
 # set os logical volume names
-# used to name logical volumes and filesystems (os btrfs RAID filesystems are named "rootraid")
+# used to name os logical volumes
 # create empty arrays for os logical volume names
 swaplvNames=()
 rootlvNames=()
@@ -385,7 +385,25 @@ done
 
 # set os filesystem names
 # used to name os filesystems
-# create empty arrays for os filesystem names (NAME RAID FILESYSTEMS AS WELL)
+# create empty arrays for os filesystem names
+efiNames=()
+swapNames=()
+rootNames=()
+for element in "${!osDisks[@]}"
+do
+    efiNames+=(efi"$element")
+    swapNames+=(swap"$element")
+    if [ "$osRaid" == false ]
+    then
+        rootNames+=(root"$element")
+    fi
+    if [ "$osRaid" == true ]
+    then
+        rootNames=(rootraid)
+    fi
+done
+# os filesystem names should be in the form of "efi0", "efi1", "swap0", "swap1", "root0", "root1", etc.
+# if raid is used for the os, rootNames should contain 1 element "rootraid"
 
 
 
@@ -479,7 +497,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -593,6 +611,21 @@ done
 for element in "${rootlvNames[@]}"
 do
     echo "rootlvNames+=($element)" >> ./variables.txt
+done
+
+for element in "${efiNames[@]}"
+do
+    echo "efiNames+=($element)" >> ./variables.txt
+done
+
+for element in "${swapNames[@]}"
+do
+    echo "swapNames+=($element)" >> ./variables.txt
+done
+
+for element in "${rootNames[@]}"
+do
+    echo "rootNames+=($element)" >> ./variables.txt
 done
 
 
@@ -736,7 +769,7 @@ sleep 3
 # create efi filesystem(s)
 for element in "${!osDisks[@]}"
 do
-    yes | mkfs.fat -F 32 -n "${efipartitionNames[$element]}" /dev/"${efiPartitions[$element]}"
+    yes | mkfs.fat -F 32 -n "${efiNames[$element]}" /dev/"${efiPartitions[$element]}"
 done
 # create swap filesystem(s)
 for element in "${!osDisks[$element]}"
