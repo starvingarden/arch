@@ -373,14 +373,20 @@ done
 # set os logical volume names
 # used to name logical volumes and filesystems (os btrfs RAID filesystems are named "rootraid")
 # create empty arrays for os logical volume names
-swapNames=()
-rootNames=()
+swaplvNames=()
+rootlvNames=()
 for element in "${!osDisks[@]}"
 do
-    swapNames+=(swap"$element")
-    rootNames+=(root"$element")
+    swaplvNames+=(swaplv"$element")
+    rootlvNames+=(rootlv"$element")
 done
-# os logical volume names should be in the form of "swap0", "swap1", "root0", "root1", etc.
+# os logical volume names should be in the form of "swaplv0", "swaplv1", "rootlv0", "rootlv1", etc.
+
+
+# set os filesystem names
+# used to name os filesystems
+# create empty arrays for os filesystem names (NAME RAID FILESYSTEMS AS WELL)
+
 
 
 
@@ -473,7 +479,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swapNames[@]} ${rootNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -579,14 +585,14 @@ do
     echo "osvolgroupNames+=($element)" >> ./variables.txt
 done
 
-for element in "${swapNames[@]}"
+for element in "${swaplvNames[@]}"
 do
-    echo "swapNames+=($element)" >> ./variables.txt
+    echo "swaplvNames+=($element)" >> ./variables.txt
 done
 
-for element in "${rootNames[@]}"
+for element in "${rootlvNames[@]}"
 do
-    echo "rootNames+=($element)" >> ./variables.txt
+    echo "rootlvNames+=($element)" >> ./variables.txt
 done
 
 
@@ -719,8 +725,8 @@ do
     # create volume group(s)
     vgcreate "${osvolgroupNames[$element]}" /dev/mapper/"${osencryptedcontainerNames[$element]}"
     # create logical volumes
-    lvcreate -L "$ramSize" "${osvolgroupNames[$element]}" -n "${swapNames[$element]}"
-    lvcreate -l 100%FREE "${osvolgroupNames[$element]}" -n "${rootNames[$element]}"
+    lvcreate -L "$ramSize" "${osvolgroupNames[$element]}" -n "${swaplvNames[$element]}"
+    lvcreate -l 100%FREE "${osvolgroupNames[$element]}" -n "${rootlvNames[$element]}"
 done
 
 
@@ -735,14 +741,14 @@ done
 # create swap filesystem(s)
 for element in "${!osDisks[$element]}"
 do
-    mkswap -L "${swapNames[$element]}" /dev/"${osvolgroupNames[$element]}"/"${swapNames[$element]}"
+    mkswap -L "${swaplvNames[$element]}" /dev/"${osvolgroupNames[$element]}"/"${swaplvNames[$element]}"
 done
 # create root filesystem
 if [ "$osRaid" == false ]
 then
     for element in "${!osDisks[@]}"
     do
-        yes | mkfs.btrfs -L "${rootNames[$element]}" -f -m dup -d single /dev/"${osvolgroupNames[$element]}"/"${rootNames[$element]}"
+        yes | mkfs.btrfs -L "${rootlvNames[$element]}" -f -m dup -d single /dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}"
     done
 fi
 if [ "$osRaid" == true ]
@@ -753,7 +759,7 @@ then
     # set root filesystem paths
     for element in "${!osDisks[@]}"
     do
-        rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootNames[$element]}")
+        rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
     done
     yes | mkfs.btrfs -L rootraid -f -m raid1 -d raid1 "${rootPaths[@]}"
 fi
@@ -763,7 +769,7 @@ fi
 printf "\e[1;32m\nCreating btrfs subvolumes\n\e[0m"
 sleep 3
 # mount root filesystem so that subvolumes can be created
-mount /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt
+mount /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt
 # create btrfs subvolumes
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
@@ -778,7 +784,7 @@ sleep 3
 # unmount partitions from /mnt
 umount -R /mnt
 # mount root subvolume to /mnt
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@ /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@ /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt
 # make directories to mount other partitions and subvolumes
 mkdir -p /mnt/efi
 mkdir -p /mnt/home
@@ -793,12 +799,12 @@ sleep 3
 # mount efi filesystem
 mount /dev/"${efiPartitions[0]}" /mnt/efi
 # mount swap filesystem
-swapon /dev/"${osvolgroupNames[0]}"/"${swapNames[0]}"
+swapon /dev/"${osvolgroupNames[0]}"/"${swaplvNames[0]}"
 # mount btrfs filesystem
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@home /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/home
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/data
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@snapshots /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/.snapshots
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${osvolgroupNames[0]}"/"${rootNames[0]}" /mnt/var
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@home /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/home
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/data
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@snapshots /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/.snapshots
+mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/var
 
 
 
