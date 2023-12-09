@@ -329,7 +329,7 @@ done
 
 # set os partition names
 # used to name os partitions
-# create empty arrays for os parition names
+# create empty arrays for os partition names
 efipartitionNames=()
 cryptospartitionNames=()
 # set efi partition name(s)
@@ -350,7 +350,7 @@ done
 
 # set os encrypted container name(s)
 # used to name os encrypted containers
-# create empty array for os encrypted container names
+# create empty array for os encrypted container name(s)
 osencryptedcontainerNames=()
 for element in "${!osDisks[@]}"
 do
@@ -419,10 +419,10 @@ done
 
 
 
-# set encrypted data partition(s)
-# create an empty array for encrypted data partitions
+# set data partition(s)
+# create an empty array for encrypted data partition(s)
 cryptdataPartitions=()
-# set encrypted data partitions
+# set data partitions
 for element in "${dataDisks[@]}"
 do
     # check if disk is an nvme
@@ -434,23 +434,24 @@ do
         cryptdataPartitions+=("$element"p1)
     fi
 done
-# encrypted data partitions should be in the form of "sda1", "nvme0n1p1", etc.
+# data partitions should be in the form of "sda1", "nvme0n1p1", etc.
 
 
-# set encrypted data partition names
-# used to name encrypted data partitions
-# create an empty arrays for encrypted data parition names
-cryptdatapartitionNames=()
 # set data partition name(s)
+# used to name data partition(s)
+# create an empty array for encrypted data partition name(s)
+cryptdatapartitionNames=()
+# set encrypted data partition name(s)
 for element in "${!dataDisks[@]}"
 do
     cryptdataPartition=(datadisk"$element"p1)
     cryptdatapartitionNames+=("$cryptdataPartition")
 done
-# encrypted data partition names should be in the form of "osdisk0p1", "osdisk1p1", etc.
+# encrypted data partition names should be in the form of "datadisk0p1", "datadisk1p1", etc.
 
 
-# set data encrypted container name(s) (used when creating encrypted containers, physical volumes, volume groups, and unlocking encrypted containers)
+# set data encrypted container name(s)
+# used to name encypted data partitions
 # create empty array for data encrypted container names
 dataencryptedcontainerNames=()
 for element in "${!dataDisks[@]}"
