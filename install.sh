@@ -58,7 +58,7 @@ encryptionPassword=""
 osDisks=""
     # this is a list of space separated disks to use for the operating system
     # you must use 1 or 2 disks
-    # if you use 2 disks, RAID will automatically be applied to the operating system disks
+    # if you use 2 disks, RAID will automatically be applied to the root filesystem
     # run "fdisk -l" to list available disks
     # NO DEFAULT VALUE
     # example: osDisks="sda nvme0n1"
@@ -67,15 +67,16 @@ dataDisks=""
     # this is a list of space separated disks to use for bulk storage
     # you can use as many disks as you like
     # you cannot use any disks that will be used for the operating system (osDisks)
+    # if you use an even number of disks, RAID will automatically be applied to the data filesystem
     # run "fdisk -l" to list available disks
     # default value = ""
     # example: dataDisks="sdb nvme1n1"
 
-dataRaid=""
+#dataRaid=""
     # this determines if raid will be used for bulk storage disks
     # you must be using an even number of data disks (dataDisks)
     # set to "true" or "false"
-    # default value = "true"
+    # default value = "false"
     # example: dataRaid="true"
 
 diskWipe=""
@@ -164,10 +165,10 @@ then
     encryptionPassword=password
 fi
 
-if [ -z "$dataRaid" ]
-then
-    dataRaid=true
-fi
+#if [ -z "$dataRaid" ]
+#then
+#    dataRaid=false
+#fi
 
 if [ -z "$diskWipe" ]
 then
@@ -295,7 +296,7 @@ ramSize=$(echo "$ramsizeInteger"M)
 # $ramSize should be an integer in gigabytes of the form 1000M
 
 
-# check if raid should be used for the operating system
+# check if raid should be used for the root filesystem
 osdisksLength=$(echo "${#osDisks[@]}")
 if [ "$osdisksLength" -gt 1 ]
 then
@@ -304,6 +305,23 @@ else
     osRaid=false
 fi
 
+
+# check if raid should be used for the data filesystem
+# check if there is an even number of data disks greater than 0
+datadisksLength=$(echo "${#dataDisks[@]}")
+if [ $((datadisksLength % 2)) -eq 0 ] && [ $datadisksLength -ne 0 ]
+then
+    dataRaid=true
+else
+    dataRaid=false
+fi
+
+
+
+
+
+# set arrays for os disks
+#########################
 
 # set os partition(s)
 # create empty arrays for os partitions
@@ -406,18 +424,19 @@ done
 # if raid is used for os disks, rootNames should contain 1 element "rootraid"
 
 
+# set os raid disks
+if [ "$osRaid" == true ]
+then
+    # create empty array for os raid
+    osRaid
+fi
 
 
 
 
 
-
-
-
-
-
-
-
+# set arrays for data disks
+###########################
 
 # set data partition(s)
 # create an empty array for encrypted data partition(s)
@@ -482,22 +501,37 @@ done
 # data logical volume names should be in the form of "datalv0", "datalv1", etc.
 
 
-# set data filesystem name(s) (THERE NEEDS TO BE MORE THAN 1 DATARAID)
+# set data filesystem name(s)
 # used to name data filesystem(s)
 # create empty array for data filesystem names
 dataNames=()
-for element in "${!dataDisks[@]}"
-do
-    dataNames+=(data"$element")
-done
+# set data filesystem name(s) for non-raid
+if [ "$dataRaid" == false ]
+then
+    for element in "${!dataDisks[@]}"
+    do
+        dataNames+=(data"$element")
+    done
+fi
+# set data filesystem name(s) for raid
+if [ "$dataRaid" == true ]
+then
+    # get the number of raid arrays to use for data disks
+    if [ "$dataRaid" == true ]
+    then
+        dataraidarrayNum=$(echo "${#dataDisks[@]} / 2" | bc)
+    fi
+    # set data filesystem name(s) for raid
+    for element in "${!dataDisks[@]}"
+    do
+        if [ "$element" -le "$dataraidarrayNum" ]
+        then
+            dataNames+=(dataraid"$element")
+        fi
+    done
+fi
 # data filesystem names should be in the form of "data0", "data1", etc.
-# if raid is used for data disks, dataNames should be "dataraid"
-
-
-
-
-
-
+# if raid is used for data disks, dataNames should be "dataraid0", "dataraid1", etc.
 
 
 
@@ -512,7 +546,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, data raid=$dataRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -569,7 +603,6 @@ echo -e "userName=$userName" >> ./variables.txt
 echo -e "userPassword=$userPassword" >> ./variables.txt
 echo -e "rootPassword=$rootPassword" >> ./variables.txt
 echo -e "encryptionPassword=$encryptionPassword" >> ./variables.txt
-echo -e "dataRaid=$dataRaid" >> ./variables.txt
 echo -e "diskWipe=$diskWipe" >> ./variables.txt
 echo -e "timeZone=$timeZone" >> ./variables.txt
 echo -e "keyMap=$keyMap" >> ./variables.txt
@@ -583,6 +616,7 @@ echo -e "processorVendor=$processorVendor" >> ./variables.txt
 echo -e "graphicsVendor=$graphicsVendor" >> ./variables.txt
 echo -e "ramSize=$ramSize" >> ./variables.txt
 echo -e "osRaid=$osRaid" >> ./variables.txt
+echo -e "dataRaid=$dataRaid" >> ./variables.txt
 for element in "${osDisks[@]}"
 do
     echo "osDisks+=($element)" >> ./variables.txt
@@ -641,6 +675,36 @@ done
 for element in "${rootNames[@]}"
 do
     echo "rootNames+=($element)" >> ./variables.txt
+done
+
+for element in "${cryptdataPartitions[@]}"
+do
+    echo "cryptdataPartitions+=($element)" >> ./variables.txt
+done
+
+for element in "${cryptdatapartitionNames[@]}"
+do
+    echo "cryptdatapartitionNames+=($element)" >> ./variables.txt
+done
+
+for element in "${dataencryptedcontainerNames[@]}"
+do
+    echo "dataencryptedcontainerNames+=($element)" >> ./variables.txt
+done
+
+for element in "${datavolgroupNames[@]}"
+do
+    echo "datavolgroupNames+=($element)" >> ./variables.txt
+done
+
+for element in "${datalvNames[@]}"
+do
+    echo "datalvNames+=($element)" >> ./variables.txt
+done
+
+for element in "${dataNames[@]}"
+do
+    echo "dataNames+=($element)" >> ./variables.txt
 done
 
 
@@ -811,6 +875,8 @@ then
     done
     yes | mkfs.btrfs -L rootraid -f -m raid1 -d raid1 "${rootPaths[@]}"
 fi
+# create data filesystems
+
 
 
 # create btrfs subvolumes
