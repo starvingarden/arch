@@ -360,8 +360,8 @@ done
 
 
 # set os volume group name(s)
-# used to name os volume groups
-# create empty array for os volume group names
+# used to name os volume group(s)
+# create empty array for os volume group name(s)
 osvolgroupNames=()
 for element in "${!osDisks[@]}"
 do
@@ -403,7 +403,7 @@ do
     fi
 done
 # os filesystem names should be in the form of "efi0", "efi1", "swap0", "swap1", "root0", "root1", etc.
-# if raid is used for the os, rootNames should contain 1 element "rootraid"
+# if raid is used for os disks, rootNames should contain 1 element "rootraid"
 
 
 
@@ -438,7 +438,7 @@ done
 
 
 # set data partition name(s)
-# used to name data partition(s)
+# used to name encrypted data partition(s)
 # create an empty array for encrypted data partition name(s)
 cryptdatapartitionNames=()
 # set encrypted data partition name(s)
@@ -451,8 +451,8 @@ done
 
 
 # set data encrypted container name(s)
-# used to name encypted data partitions
-# create empty array for data encrypted container names
+# used to name data encrypted containers
+# create empty array for data encrypted container name(s)
 dataencryptedcontainerNames=()
 for element in "${!dataDisks[@]}"
 do
@@ -462,6 +462,7 @@ done
 
 
 # set data volume group name(s)
+# used to name data volume group(s)
 # create empty array for data volume group names
 datavolgroupNames=()
 for element in "${!dataDisks[@]}"
@@ -471,14 +472,26 @@ done
 # data volume group names should be in the form of "datavolgroup0", "datavolgroup1", etc.
 
 
-# set data logical volume names
-# create empty arrays for data logical volume names
+# set data logical volume name(s)
+# create empty array for data logical volume names
+datalvNames=()
+for element in "${!dataDisks[@]}"
+do
+    datalvNames+=(datalv"$element")
+done
+# data logical volume names should be in the form of "datalv0", "datalv1", etc.
+
+
+# set data filesystem name(s) (THERE NEEDS TO BE MORE THAN 1 DATARAID)
+# used to name data filesystem(s)
+# create empty array for data filesystem names
 dataNames=()
 for element in "${!dataDisks[@]}"
 do
     dataNames+=(data"$element")
 done
-# data logical volume names should be in the form of "swap0", "swap1", "root0", "root1", etc.
+# data filesystem names should be in the form of "data0", "data1", etc.
+# if raid is used for data disks, dataNames should be "dataraid"
 
 
 
