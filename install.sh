@@ -71,7 +71,7 @@ dataDisks=""
     # this is a list of space separated disks to use for bulk storage
     # you can use as many disks as you like
     # you cannot use any disks that will be used for the operating system (osDisks)
-    # if you use an even number of disks, RAID will automatically be applied to the data filesystem
+    # if you use more than 1 disk, RAID will automatically be applied to the data filesystem
     # run "fdisk -l" to list available disks
     # default value = ""
     # example: dataDisks="sdb nvme1n1"
@@ -311,9 +311,8 @@ fi
 
 
 # check if raid should be used for the data filesystem
-# check if there is an even number of data disks greater than 0
 datadisksLength=$(echo "${#dataDisks[@]}")
-if [ $((datadisksLength % 2)) -eq 0 ] && [ $datadisksLength -ne 0 ]
+if [ "$datadisksLength" -gt 1 ]
 then
     dataRaid=true
 else
@@ -432,7 +431,8 @@ done
 if [ "$osRaid" == true ]
 then
     # create empty array for os raid
-    osRaid
+    #osRaid
+    continue
 fi
 
 
