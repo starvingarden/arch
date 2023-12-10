@@ -10,7 +10,6 @@
 # user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
-# allow more than 2 osDisks
 # configure raid
 
 # btrfs does NOT support having different raid levels in the same filesystem
@@ -651,6 +650,11 @@ done
 for element in "${rootNames[@]}"
 do
     echo "rootNames+=($element)" >> ./variables.txt
+done
+
+for element in "${dataDisks[@]}"
+do
+    echo "dataDisks+=($element)" >> ./variables.txt
 done
 
 for element in "${cryptdataPartitions[@]}"
