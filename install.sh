@@ -14,7 +14,7 @@
 # configure raid
 
 # btrfs does NOT support having different raid levels in the same filesystem
-# btrfs raid1 supports 2 or more disks, 50% utilization
+# btrfs raid1 supports 2 or more disks, 50% of total storage utilization
 # to create a filesystem across drives (mkfs.btrfs -L filesystemLabel -f -m dup -d single /dev/sda1 /dev/sdb1 /dev/sdc1)
 # to create a raid filesystem (mkfs.btrfs -L filesystemLabel -f -m raid1 -d raid1 /dev/sda1 /dev/sdb1 /dev/sdc1)
 # to add a disk sdb1 to a single disk filesystem on sda1 and convert to raid1 (mount /dev/sda1 /mnt && btrfs device add /dev/sdb1 /mnt && btrfs balance start -dconvert=raid1 -mconvert=raid1 /mnt)
@@ -27,7 +27,7 @@
 # IMPORTANT INFORMATION
 #######################
 
-# You must set all of these variables unless using the default value, or if the variable says it can be blank
+# You must set all of these variables unless using the default value
 # To use the default value for a variable, leave it blank
 # Not all variables have a default value, these variables cannot be left blank
 # All variables must be enclosed inside double quotes
@@ -63,8 +63,8 @@ encryptionPassword=""
 
 osDisks=""
     # this is a list of space separated disks to use for the operating system
-    # you must use 1 or 2 disks
-    # if you use 2 disks, RAID will automatically be applied to the root filesystem
+    # you must use 1 or more disks
+    # if you use more than 1 disk, RAID1 will automatically be applied to the root filesystem
     # run "fdisk -l" to list available disks
     # NO DEFAULT VALUE
     # example: osDisks="sda nvme0n1"
@@ -78,8 +78,8 @@ dataDisks=""
     # example: dataDisks="sdb nvme1n1"
 
 dataRaid=""
-    # this determines if raid will be used for bulk storage disks
-    # you must be using more than 1 data disks (dataDisks)
+    # this determines if RAID1 will be used for bulk storage disks
+    # you must be using more than 1 data disks (dataDisks) to enable
     # set to "true" or "false"
     # default value = "false"
     # example: dataRaid="true"
