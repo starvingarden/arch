@@ -64,7 +64,6 @@ encryptionPassword=""
 osDisks=""
     # this is a list of space separated disks to use for the operating system
     # you must use 1 or more disks
-    # if you use more than 1 disk, RAID1 will automatically be applied to the root filesystem
     # run "fdisk -l" to list available disks
     # NO DEFAULT VALUE
     # example: osDisks="sda nvme0n1"
@@ -407,17 +406,19 @@ for element in "${!osDisks[@]}"
 do
     efiNames+=(efi"$element")
     swapNames+=(swap"$element")
+    # set rootNames for non-RAID root filesystem
     if [ "$osRaid" == false ]
     then
         rootNames+=(root"$element")
     fi
+    # set rootNames for RAID1 filesystem
     if [ "$osRaid" == true ]
     then
         rootNames=(rootraid)
     fi
 done
 # os filesystem names should be in the form of "efi0", "efi1", "swap0", "swap1", "root0", "root1", etc.
-# if raid is used for os disks, rootNames should contain 1 element "rootraid"
+# if RAID1 is used for os disks, rootNames should contain 1 element "rootraid"
 
 
 
