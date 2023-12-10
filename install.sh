@@ -11,6 +11,7 @@
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
 # btrfs does NOT support having different raid levels in the same filesystem
+# btrfs raid1 supports 2 or more disks, 50% utilization
 
 # to create a filesystem across drives (mkfs.btrfs -L filesystemLabel -f -m dup -d single /dev/sda1 /dev/sdb1 /dev/sdc1)
 # to create a raid filesystem (mkfs.btrfs -L filesystemLabel -f -m raid1 -d raid1 /dev/sda1 /dev/sdb1 /dev/sdc1)
