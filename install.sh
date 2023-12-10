@@ -407,12 +407,12 @@ for element in "${!osDisks[@]}"
 do
     efiNames+=(efi"$element")
     swapNames+=(swap"$element")
-    # set rootNames for non-RAID root filesystem
+    # set non-RAID root filesystem name
     if [ "$osRaid" == false ]
     then
         rootNames=(root)
     fi
-    # set rootNames for RAID1 root filesystem
+    # set RAID1 root filesystem name
     if [ "$osRaid" == true ]
     then
         rootNames=(rootraid)
