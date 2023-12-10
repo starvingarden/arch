@@ -11,6 +11,7 @@
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
 # configure raid
+# configure script to work if there are no data disks
 
 # btrfs does NOT support having different raid levels in the same filesystem
 # btrfs raid1 supports 2 or more disks, 50% of total storage utilization
@@ -789,20 +790,20 @@ done
 # encrypt necessary partitions
 printf "\e[1;32m\nEncrypting necessary partitions\n\e[0m"
 sleep 3
-# set up encryption for root partition(s)
+# encrypt os partition(s)
 for element in "${!osDisks[@]}"
 do
-    # encrypt root partition(s)
+    # encrypt os partition(s)
     echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptosPartitions[$element]}"    # grub has limited support for luks2 (luks2 supports labels)
-    # decrypt and name decrypted root partition(s) so it can be used
+    # decrypt and name decrypted os partition(s) so they can be used
     echo -e "$encryptionPassword" | cryptsetup open /dev/"${cryptosPartitions[$element]}" "${osencryptedcontainerNames[$element]}"
 done
-# set up encryption for data partition(s)
-for element in "${!dataPartitions[@]}"
+# encrypt data partition(s)
+for element in "${!dataDisks[@]}"
 do
     # encrypt data partition(s)
     echo -e "$encryptionPassword" | cryptsetup luksFormat -q --type luks1 /dev/"${cryptdataPartitions[$element]}"    # grub has limited support for luks2 (luks2 supports labels)
-    # decrypt and name decrypted data partition(s) so it can be used
+    # decrypt and name decrypted data partition(s) so they can be used
     echo -e "$encryptionPassword" | cryptsetup open /dev/"${cryptdataPartitions[$element]}" "${dataencryptedcontainerNames[$element]}"
 done
 
@@ -810,6 +811,7 @@ done
 # create logical volumes
 printf "\e[1;32m\nCreating logical volumes\n\e[0m"
 sleep 3
+# create os logical volumes
 for element in "${!osDisks[@]}"
 do
     # create physical volume(s)
@@ -820,9 +822,19 @@ do
     lvcreate -L "$ramSize" "${osvolgroupNames[$element]}" -n "${swaplvNames[$element]}"
     lvcreate -l 100%FREE "${osvolgroupNames[$element]}" -n "${rootlvNames[$element]}"
 done
+# create data logical volume(s)
+for element in "${!dataDisks[@]}"
+do
+    # create physical volume(s)
+    pvcreate /dev/mapper/"${dataencryptedcontainerNames[$element]}"
+    # create volume group(s)
+    vgcreate "${datavolgroupNames[$element]}" /dev/mapper/"${dataencryptedcontainerNames[$element]}"
+    # create logical volume(s)
+    lvcreate -l 100%FREE "${datavolgroupNames[$element]}" -n "${datalvNames[$element]}"
+done
 
 
-# create filesystems
+# create filesystems  (USE ALL ROOT AND DATA LOGICAL VOLUMES)
 printf "\e[1;32m\nCreating filesystems\n\e[0m"
 sleep 3
 # create efi filesystem(s)
@@ -835,28 +847,44 @@ for element in "${!osDisks[$element]}"
 do
     mkswap -L "${swaplvNames[$element]}" /dev/"${osvolgroupNames[$element]}"/"${swaplvNames[$element]}"
 done
-# create root filesystem
+# create root filesystem (NEED TO GET ALL ROOT LOGICAL VOLUME PATHS)
+# set array for all root filesystem paths
+# create empty array for all root filesystem paths
+rootPaths=()
+# set root filesystem paths
+for element in "${!osDisks[@]}"
+do
+    rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
+done
+# create non-RAID root filesystem
 if [ "$osRaid" == false ]
 then
-    for element in "${!osDisks[@]}"
-    do
-        yes | mkfs.btrfs -L "${rootlvNames[$element]}" -f -m dup -d single /dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}"
-    done
+    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m dup -d single "${rootPaths[@]}"
 fi
+# create RAID1 root filesystem
 if [ "$osRaid" == true ]
 then
-    # set array for all root filesystem paths
-    # create empty array for root filesystem paths
-    rootPaths=()
-    # set root filesystem paths
-    for element in "${!osDisks[@]}"
-    do
-        rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
-    done
-    yes | mkfs.btrfs -L rootraid -f -m raid1 -d raid1 "${rootPaths[@]}"
+    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m raid1 -d raid1 "${rootPaths[@]}"
 fi
 # create data filesystems
-
+# set array for all data filesystem paths
+# create empty array for all data filesystem paths
+dataPaths=()
+# set data filesystem paths
+for element in "${!dataDisks[@]}"
+do
+    dataPaths+=(/dev/"${datavolgroupNames[$element]}"/"${datalvNames[$element]}")
+done
+# create non-RAID data filesystem
+if [ "$dataRaid" == false ]
+then
+    yes | mkfs.btrfs -L "${dataNames[@]}" -f -m dup -d single "${dataPaths[@]}"
+fi
+# create RAID1 data filesystem
+if [ "$dataRaid" == true ]
+then
+    yes | mkfs.btrfs -L "${dataNames[@]}" -f -m raid1 -d raid1 "${dataPaths[@]}"
+fi
 
 
 # create btrfs subvolumes
