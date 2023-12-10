@@ -410,16 +410,17 @@ do
     # set rootNames for non-RAID root filesystem
     if [ "$osRaid" == false ]
     then
-        rootNames+=(root"$element")
+        rootNames=(root)
     fi
-    # set rootNames for RAID1 filesystem
+    # set rootNames for RAID1 root filesystem
     if [ "$osRaid" == true ]
     then
         rootNames=(rootraid)
     fi
 done
-# os filesystem names should be in the form of "efi0", "efi1", "swap0", "swap1", "root0", "root1", etc.
-# if RAID1 is used for os disks, rootNames should contain 1 element "rootraid"
+# non-root os filesystem names should be in the form of "efi0", "efi1", "swap0", "swap1", etc.
+# a non-RAID root filesystems should be "root"
+# a RAID1 root filesystem should be "rootraid"
 
 
 
