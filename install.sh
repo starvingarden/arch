@@ -890,29 +890,43 @@ fi
 # create btrfs subvolumes
 printf "\e[1;32m\nCreating btrfs subvolumes\n\e[0m"
 sleep 3
-# mount root filesystem so that subvolumes can be created
+# create btrfs subvolumes for root filesystem
+# mount root logical volume so that root subvolumes can be created
 mount /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt
 # create btrfs subvolumes
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
-btrfs subvolume create /mnt/@data
 btrfs subvolume create /mnt/@snapshots
 btrfs subvolume create /mnt/@var
+# create data btrfs subvolume on root logical volume if not using any data disks
+if [ ${#dataDisks[@]} -eq 0 ]
+then
+    btrfs subvolume create /mnt/@data
+fi
+# unmount root logical volume from /mnt
+umount -R /mnt
+# create btrfs subvolume for data filesystem if necessary
+if [ ${#dataDisks[@]} -ne 0 ]
+then
+    # mount data logical volume so that the data subvolume can be created
+    mount /dev/"${datavolgroupNames[0]}"/"${datalvNames[0]}" /mnt
+    btrfs subvolume create /mnt/@data
+    # unmount data logical volume from /mnt
+    umount -R /mnt
+fi
 
 
 # create directories to mount filesystems
 printf "\e[1;32m\nCreating directories to mount filesystems\n\e[0m"
 sleep 3
-# unmount partitions from /mnt
-umount -R /mnt
 # mount root subvolume to /mnt
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@ /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt
 # make directories to mount other partitions and subvolumes
 mkdir -p /mnt/efi
 mkdir -p /mnt/home
-mkdir -p /mnt/data
 mkdir -p /mnt/.snapshots
 mkdir -p /mnt/var
+mkdir -p /mnt/data
 
 
 # mount filesystems
@@ -922,11 +936,19 @@ sleep 3
 mount /dev/"${efiPartitions[0]}" /mnt/efi
 # mount swap filesystem
 swapon /dev/"${osvolgroupNames[0]}"/"${swaplvNames[0]}"
-# mount btrfs filesystem
+# mount root subvolumes
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@home /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/home
-mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/data
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@snapshots /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/.snapshots
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/var
+if [ ${#dataDisks[@]} -eq 0 ]
+then
+    mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/data
+done
+if [ ${#dataDisks[@]} -ne 0 ]
+then
+    mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${datavolgroupNames[0]}"/"${datalvNames[0]}" /mnt/data
+done
+
 
 
 
