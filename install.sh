@@ -423,6 +423,17 @@ done
 # a RAID1 root filesystem should be "rootraid"
 
 
+# set array for all root filesystem paths
+# used when creating filesystems
+# create empty array for all root filesystem paths
+rootPaths=()
+# set root filesystem paths
+for element in "${!osDisks[@]}"
+do
+    rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
+done
+
+
 
 
 
@@ -510,6 +521,17 @@ fi
 # a RAID1 data filesystem should be "dataraid"
 
 
+# set array for all data filesystem paths
+# used when creating filesystems
+# create empty array for all data filesystem paths
+dataPaths=()
+# set data filesystem paths
+for element in "${!dataDisks[@]}"
+do
+    dataPaths+=(/dev/"${datavolgroupNames[$element]}"/"${datalvNames[$element]}")
+done
+
+
 
 
 
@@ -522,7 +544,7 @@ fi
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, root filesystem paths=${rootPaths[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]} data filesystem paths=${dataPaths[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -653,6 +675,11 @@ do
     echo "rootNames+=($element)" >> ./variables.txt
 done
 
+for element in "${rootPaths[@]}"
+do
+    echo "rootPaths+=($element)" >> ./variables.txt
+done
+
 for element in "${dataDisks[@]}"
 do
     echo "dataDisks+=($element)" >> ./variables.txt
@@ -686,6 +713,11 @@ done
 for element in "${dataNames[@]}"
 do
     echo "dataNames+=($element)" >> ./variables.txt
+done
+
+for element in "${dataPaths[@]}"
+do
+    echo "dataPaths+=($element)" >> ./variables.txt
 done
 
 
@@ -834,7 +866,7 @@ do
 done
 
 
-# create filesystems  (USE ALL ROOT AND DATA LOGICAL VOLUMES)
+# create filesystems
 printf "\e[1;32m\nCreating filesystems\n\e[0m"
 sleep 3
 # create efi filesystem(s)
@@ -847,15 +879,7 @@ for element in "${!osDisks[$element]}"
 do
     mkswap -L "${swaplvNames[$element]}" /dev/"${osvolgroupNames[$element]}"/"${swaplvNames[$element]}"
 done
-# create root filesystem (NEED TO GET ALL ROOT LOGICAL VOLUME PATHS)
-# set array for all root filesystem paths
-# create empty array for all root filesystem paths
-rootPaths=()
-# set root filesystem paths
-for element in "${!osDisks[@]}"
-do
-    rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
-done
+# create root filesystem
 # create non-RAID root filesystem
 if [ "$osRaid" == false ]
 then
@@ -866,24 +890,19 @@ if [ "$osRaid" == true ]
 then
     yes | mkfs.btrfs -L "${rootNames[@]}" -f -m raid1 -d raid1 "${rootPaths[@]}"
 fi
-# create data filesystems
-# set array for all data filesystem paths
-# create empty array for all data filesystem paths
-dataPaths=()
-# set data filesystem paths
-for element in "${!dataDisks[@]}"
-do
-    dataPaths+=(/dev/"${datavolgroupNames[$element]}"/"${datalvNames[$element]}")
-done
-# create non-RAID data filesystem
-if [ "$dataRaid" == false ]
+# create data filesystems if necessary
+if [ "${#dataDisks[@]}" -ne 0 ]
 then
-    yes | mkfs.btrfs -L "${dataNames[@]}" -f -m dup -d single "${dataPaths[@]}"
-fi
-# create RAID1 data filesystem
-if [ "$dataRaid" == true ]
-then
-    yes | mkfs.btrfs -L "${dataNames[@]}" -f -m raid1 -d raid1 "${dataPaths[@]}"
+    # create non-RAID data filesystem
+    if [ "$dataRaid" == false ]
+    then
+        yes | mkfs.btrfs -L "${dataNames[@]}" -f -m dup -d single "${dataPaths[@]}"
+    fi
+    # create RAID1 data filesystem
+    if [ "$dataRaid" == true ]
+    then
+        yes | mkfs.btrfs -L "${dataNames[@]}" -f -m raid1 -d raid1 "${dataPaths[@]}"
+    fi
 fi
 
 
@@ -899,14 +918,14 @@ btrfs subvolume create /mnt/@home
 btrfs subvolume create /mnt/@snapshots
 btrfs subvolume create /mnt/@var
 # create data btrfs subvolume on root logical volume if not using any data disks
-if [ ${#dataDisks[@]} -eq 0 ]
+if [ "${#dataDisks[@]}" -eq 0 ]
 then
     btrfs subvolume create /mnt/@data
 fi
 # unmount root logical volume from /mnt
 umount -R /mnt
 # create btrfs subvolume for data filesystem if necessary
-if [ ${#dataDisks[@]} -ne 0 ]
+if [ "${#dataDisks[@]}" -ne 0 ]
 then
     # mount data logical volume so that the data subvolume can be created
     mount /dev/"${datavolgroupNames[0]}"/"${datalvNames[0]}" /mnt
@@ -914,6 +933,15 @@ then
     # unmount data logical volume from /mnt
     umount -R /mnt
 fi
+
+
+
+
+
+
+#####################################################
+# start: needs to work if there are no datadisks
+#####################################################
 
 
 # create directories to mount filesystems
@@ -940,14 +968,19 @@ swapon /dev/"${osvolgroupNames[0]}"/"${swaplvNames[0]}"
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@home /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/home
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@snapshots /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/.snapshots
 mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/var
-if [ ${#dataDisks[@]} -eq 0 ]
+if [ "${#dataDisks[@]}" -eq 0 ]
 then
     mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/data
 done
-if [ ${#dataDisks[@]} -ne 0 ]
+if [ "${#dataDisks[@]}" -ne 0 ]
 then
     mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${datavolgroupNames[0]}"/"${datalvNames[0]}" /mnt/data
 done
+
+
+#####################################################
+# end: needs to work if there are no datadisks
+#####################################################
 
 
 
