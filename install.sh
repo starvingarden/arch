@@ -69,16 +69,23 @@ osDisks=""
     # NO DEFAULT VALUE
     # example: osDisks="sda nvme0n1"
 
+osRaid=""
+    # this determines if RAID1 will be used for the root filesystem
+    # you must be using more than 1 os disks (osDisks) to enable
+    # set to "true" or "false"
+    # default value = "false"
+    # example: osRaid="true"
+
 dataDisks=""
     # this is a list of space separated disks to use for bulk storage
-    # you can use as many disks as you like
+    # you can use as many disks as you like (including none)
     # you cannot use any disks that will be used for the operating system (osDisks)
     # run "fdisk -l" to list available disks
     # default value = ""
     # example: dataDisks="sdb nvme1n1"
 
 dataRaid=""
-    # this determines if RAID1 will be used for bulk storage disks
+    # this determines if RAID1 will be used for the bulk storage filesystem
     # you must be using more than 1 data disks (dataDisks) to enable
     # set to "true" or "false"
     # default value = "false"
@@ -168,6 +175,11 @@ fi
 if [ -z "$encryptionPassword" ]
 then
     encryptionPassword=password
+fi
+
+if [ -z "$osRaid" ]
+then
+    osRaid=false
 fi
 
 if [ -z "$dataRaid" ]
@@ -301,16 +313,6 @@ ramSize=$(echo "$ramsizeInteger"M)
 # $ramSize should be an integer in gigabytes of the form 1000M
 
 
-# check if raid should be used for the root filesystem
-osdisksLength=$(echo "${#osDisks[@]}")
-if [ "$osdisksLength" -gt 1 ]
-then
-    osRaid=true
-else
-    osRaid=false
-fi
-
-
 
 
 
@@ -416,15 +418,6 @@ do
 done
 # os filesystem names should be in the form of "efi0", "efi1", "swap0", "swap1", "root0", "root1", etc.
 # if raid is used for os disks, rootNames should contain 1 element "rootraid"
-
-
-# set os raid disks
-if [ "$osRaid" == true ]
-then
-    # create empty array for os raid
-    #osRaid
-    continue
-fi
 
 
 
@@ -541,7 +534,7 @@ fi
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os raid=$osRaid, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -598,6 +591,7 @@ echo -e "userName=$userName" >> ./variables.txt
 echo -e "userPassword=$userPassword" >> ./variables.txt
 echo -e "rootPassword=$rootPassword" >> ./variables.txt
 echo -e "encryptionPassword=$encryptionPassword" >> ./variables.txt
+echo -e "osRaid=$osRaid" >> ./variables.txt
 echo -e "dataRaid=$dataRaid" >> ./variables.txt
 echo -e "diskWipe=$diskWipe" >> ./variables.txt
 echo -e "timeZone=$timeZone" >> ./variables.txt
@@ -611,7 +605,6 @@ echo -e "laptopInstall=$laptopInstall" >> ./variables.txt
 echo -e "processorVendor=$processorVendor" >> ./variables.txt
 echo -e "graphicsVendor=$graphicsVendor" >> ./variables.txt
 echo -e "ramSize=$ramSize" >> ./variables.txt
-echo -e "osRaid=$osRaid" >> ./variables.txt
 for element in "${osDisks[@]}"
 do
     echo "osDisks+=($element)" >> ./variables.txt
