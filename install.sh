@@ -10,11 +10,11 @@
 # user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
+# btrfs does NOT support having different raid levels in the same filesystem
 
 # to create a filesystem across drives (mkfs.btrfs -L filesystemLabel -f -m dup -d single /dev/sda1 /dev/sdb1 /dev/sdc1)
 # to create a raid filesystem (mkfs.btrfs -L filesystemLabel -f -m raid1 -d raid1 /dev/sda1 /dev/sdb1 /dev/sdc1)
-# to add a disk to a single disk filesystem and convert to raid1 (btrfs device add /dev/sdc1 mountPoint && btrfs balance start -dconvert=raid1 -mconvert=raid1 mountPoint)
-# to add a single device to an existing raid array, 2 mirrored disks with 1 additional non-mirrored disk (btrfs device add /dev/sdc1 mountPoint && btrfs balance start 
+# to add a disk sdb1 to a single disk filesystem on sda1 and convert to raid1 (mount /dev/sda1 /mnt && btrfs device add /dev/sdb1 /mnt && btrfs balance start -dconvert=raid1 -mconvert=raid1 /mnt)
 
 
 
