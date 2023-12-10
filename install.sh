@@ -496,33 +496,18 @@ done
 # used to name data filesystem(s)
 # create empty array for data filesystem names
 dataNames=()
-# set data filesystem name(s) for non-RAID data filesystem
+# set non-RAID data filesystem name
 if [ "$dataRaid" == false ]
 then
-    for element in "${!dataDisks[@]}"
-    do
-        dataNames+=(data"$element")
-    done
+    dataNames=(data)
 fi
-# set data filesystem name(s) for raid
+# set RAID1 data filesystem name
 if [ "$dataRaid" == true ]
 then
-    # get the number of raid arrays to use for data disks
-    if [ "$dataRaid" == true ]
-    then
-        dataraidarrayNum=$(echo "${#dataDisks[@]} / 2" | bc)
-    fi
-    # set data filesystem name(s) for raid
-    for element in "${!dataDisks[@]}"
-    do
-        if [ "$element" -le "$dataraidarrayNum" ]
-        then
-            dataNames+=(dataraid"$element")
-        fi
-    done
+    dataNames=(dataraid)
 fi
-# data filesystem names should be in the form of "data0", "data1", etc.
-# if raid is used for data disks, dataNames should be "dataraid0", "dataraid1", etc.
+# a non-RAID data fileystem should be "data"
+# a RAID1 data filesystem should be "dataraid"
 
 
 
