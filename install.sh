@@ -402,6 +402,7 @@ done
 efiNames=()
 swapNames=()
 rootNames=()
+# set os filesystem names
 for element in "${!osDisks[@]}"
 do
     efiNames+=(efi"$element")
@@ -494,7 +495,7 @@ done
 # used to name data filesystem(s)
 # create empty array for data filesystem names
 dataNames=()
-# set data filesystem name(s) for non-raid
+# set data filesystem name(s) for non-RAID data filesystem
 if [ "$dataRaid" == false ]
 then
     for element in "${!dataDisks[@]}"
