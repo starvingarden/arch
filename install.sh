@@ -12,6 +12,7 @@
 # use persistent block device naming for initramfs and grub configuration
 # configure raid
 # configure script to work if there are no data disks
+# change rootPaths and dataPaths to rootlvPaths and datalvPaths???
 
 # btrfs does NOT support having different raid levels in the same filesystem
 # btrfs raid1 supports 2 or more disks, 50% of total storage utilization
