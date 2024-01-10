@@ -10,7 +10,6 @@
 # user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
-# configure raid
 # configure script to work if there are no data disks
 # change rootPaths and dataPaths to rootlvPaths and datalvPaths???
 
