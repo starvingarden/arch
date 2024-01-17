@@ -29,7 +29,7 @@ paru
 # official repo
 paru -S --needed arch-wiki-docs arch-wiki-lite bash-completion exfatprogs flatpak ifuse libimobiledevice npm ntfs-3g python-pip
 # aur
-paru -S --needed cheat ttf-ms-win11
+paru -S --needed cheat
 
 
 
@@ -47,9 +47,9 @@ paru -S --needed bat bc cpupower firewalld fzf gnupg hwinfo inotify-tools libqal
 ##################
 
 # official repo
-pacman -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes-extra gtk2 gtk3 gtk4 iio-sensor-proxy light noto-fonts noto-fonts-emoji otf-font-awesome qt5-base qt5-wayland qt6-base qt6-wayland seatd sway swaybg swayidle ttf-hack waybar wayland wayland-docs wayland-utils wl-clipboard xorg-xwayland
+pacman -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes-extra gtk2 gtk3 gtk4 iio-sensor-proxy light noto-fonts noto-fonts-emoji otf-font-awesome qt5-base qt5-wayland qt6-base qt6-wayland seatd sway swaybg swayidle ttf-dejavu ttf-hack waybar wayland wayland-docs wayland-utils wl-clipboard xorg-xwayland
 # aur
-paru -S --needed autotiling noto-fonts-emoji otf-font-awesome swaylock-effects wl-clip-persist-git
+paru -S --needed autotiling swaylock-effects ttf-ms-win11 wl-clip-persist-git
 
 
 
