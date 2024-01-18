@@ -52,7 +52,7 @@ pacman -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes
 paru -S --needed autotiling swaylock-effects ttf-ms-win11 wl-clip-persist-git
 
 ####################### fonts
-paru -S --needed nerd-fonts noto-fonts-emoji
+paru -S --needed nerd-fonts noto-fonts-emoji otf-font-awesome
 
 
 
