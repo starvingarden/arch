@@ -205,7 +205,7 @@ sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # resume=/dev/${osvolgroupNames[0]}/${swaplvNames[0]} (enables resuming from swap hibernation)
 # sysctl.vm.swappiness=0 (sets swappiness on boot)
 sed -i "s|GRUB_CMDLINE_LINUX_DEFAULT=\"|GRUB_CMDLINE_LINUX_DEFAULT=\"rd.luks.name=$cryptospartitionUUID=${osencryptedcontainerNames[0]} rd.luks.key=$cryptospartitionUUID=/root/crypt-keys/crypt-key.keyfile root=/dev/${osvolgroupNames[0]}/${rootlvNames[0]} resume=/dev/${osvolgroupNames[0]}/${swaplvNames[0]} sysctl.vm.swappiness=0 |" /etc/default/grub
-if [ -z "$multiBoot" ] || [ "$multiBoot" == true ]
+if [ "$multiBoot" == true ]
 then
     # show other operating systems in grub boot menu
     sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
