@@ -7,7 +7,7 @@
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
 # get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk1, etc.)
 # each disk has its own physical volume, volume group, and logical volume(s). RAID is used via btrfs
-# user should specify disks in the order they want (osdisk1 will the 1st listed, osdisk2 2nd listed, etc.)
+# user should specify disks in the order they want (osdisk1 should be the 1st listed, osdisk2 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
 # configure script to work if there are no data disks
