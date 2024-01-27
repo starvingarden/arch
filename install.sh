@@ -977,11 +977,11 @@ mount -o noatime,compress=zstd,space_cache=v2,subvol=@var /dev/"${osvolgroupName
 if [ "${#dataDisks[@]}" -eq 0 ]
 then
     mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${osvolgroupNames[0]}"/"${rootlvNames[0]}" /mnt/data
-done
+fi
 if [ "${#dataDisks[@]}" -ne 0 ]
 then
     mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${datavolgroupNames[0]}"/"${datalvNames[0]}" /mnt/data
-done
+fi
 
 
 #####################################################
