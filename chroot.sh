@@ -154,10 +154,14 @@ do
     echo -e "$encryptionPassword" | cryptsetup luksAddKey /dev/"${cryptosPartitions[$element]}" /root/crypt-keys/crypt-key.keyfile
 done
 # add keyfile as a LUKS key to encrypted data partitions
+for element in "${!cryptdataPartitions[@]}"
+do
+    echo -e "$encryptionPassword" | cryptsetup luksAddKey /dev/"${cryptdataPartitions[$element]}" /root/crypt-keys/crypt-key.keyfile
+done
 
 
 # configure mkinitcpio.conf (see the following arch wiki pages)
-# dm-crypt/Encrypting an entire system#LUKS on a partition
+# dm-crypt/Encrypting an entire system
 printf "\e[1;32m\nConfiguring initcpio\n\e[0m"
 sleep 3
 # add btrfs into binaries so that btrfs-check will work (see arch wiki page "btrfs#Troubleshooting")
