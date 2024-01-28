@@ -4,6 +4,7 @@
 # notes
 #######
 
+# for os-prober (GRUB dual boot) to work, you may need to mount the windows efi partition with "mount /dev/{windows-efi-partition} /mnt/{foo}", then regenerate the grub config file with "grub-mkconfig -o /boot/grub/grub.cfg"
 # each disk has its own physical volume, volume group, and logical volume(s). RAID is used via btrfs
 # btrfs does NOT support having different raid levels in the same filesystem
 # btrfs raid1 supports 2 or more disks, 50% of total storage utilization
