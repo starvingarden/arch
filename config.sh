@@ -13,8 +13,7 @@ fi
 
 # check to see if required packages were installed from packages.txt
 paruExists=$(pacman -Qqs paru)
-zramdExists=$(pacman -Qqs swaylock-effects)
-if [ "$paruExists" != paru ] || [ "$zramdExists" != zramd ]
+if [ "$paruExists" != paru ]
 then
     printf "\e[1;31m\nRequired packages not installed from packages.txt\n\e[0m"
     exit
@@ -35,6 +34,7 @@ fi
 # get username
 userName=$(users | grep -Eio '^[[:graph:]]*[^ ]')
 
+
 # # check if installing on a laptop
 laptopInstall=$(neofetch battery)
 if [ -z "$laptopInstall" ]
@@ -44,8 +44,10 @@ else
     laptopInstall=true
 fi
 
+
 # get root subvolume id
 #rootSubvolumeID=$(btrfs subvolume list / | grep -i '@$' | grep -Eio 'id [0-9]*' | grep -Eio '[0-9]*')
+
 
 # get customConfig variable
 customConfig=$(ls -a /home/"$userName" | grep -io 'customconfig')
@@ -56,41 +58,56 @@ else
     customConfig=false
 fi
 
+
+
+
+
+
+
+
+
+
 # verify system information gathered automatically is correct
 while true
 do
-echo -e "username=$userName, laptop=$laptopInstall, custom configurations=$customConfig"
-read -rp $'\n'"Is the system information correct? [Y/n] " systemInformation
-    systemInformation=${systemInformation:-Y}
-    if [ "$systemInformation" == Y ] || [ "$systemInformation" == y ] || [ "$systemInformation" == yes ] || [ "$systemInformation" == YES ] || [ "$systemInformation" == Yes ]
-    then
-        systemInformation=true
-        read -rp $'\n'"Are you sure the system information is correct? [Y/n] " systeminformationConfirm
-        systeminformationConfirm=${systeminformationConfirm:-Y}
-        case $systeminformationConfirm in
-            [yY][eE][sS]|[yY]) break;;
-            [nN][oO]|[nN]);;
-            *);;
-        esac
-        REPLY=
-    else
-        systemInformation=false
-        read -rp $'\n'"Are you sure the system information is NOT correct? [Y/n] " systeminformationConfirm
-        systeminformationConfirm=${systeminformationConfirm:-Y}
-        case $systeminformationConfirm in
-            [yY][eE][sS]|[yY]) break;;
-            [nN][oO]|[nN]);;
-            *);;
-        esac
-        REPLY=
-    fi
+    echo -e "username=$userName, laptop=$laptopInstall, custom configurations=$customConfig"
+    read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
+    case $systemInformation in
+        [yY][eE][sS]|[yY])
+            read -rp $'\n'"Are you sure the variables for system information are correct? [Y/n] " systeminformationConfirm
+            systeminformationConfirm=${systeminformationConfirm:-Y}
+            case $systeminformationConfirm in
+                [yY][eE][sS]|[yY])
+                    break
+                    ;;
+                [nN][oO]|[nN])
+                    echo -e "\n\n"
+                    ;;
+                *)
+                    ;;
+            esac
+            REPLY=
+            ;;
+        [nN][oO]|[nN])
+            read -rp $'\n'"Are you sure the variables for system information are NOT correct? [Y/n] " systeminformationConfirm
+            systeminformationConfirm=${systeminformationConfirm:-Y}
+            case $systeminformationConfirm in
+                [yY][eE][sS]|[yY])
+                    exit
+                    ;;
+                [nN][oO]|[nN])
+                    echo -e "\n\n"
+                    ;;
+                *)
+                    ;;
+            esac
+            REPLY=
+            ;;
+        *)
+            ;;
+    esac
+    REPLY=
 done
-
-# exit if system information is not correct
-if [ "$systemInformation" == false ]
-then
-    exit
-fi
 
 
 
@@ -204,12 +221,6 @@ sleep 3
 # create a symlink so that flatpaks are in /usr/share/applications
 #ln -s /var/lib/flatpak /usr/share/applications
 
-# enable sway 
-# add user to seat group
-gpasswd -a "$userName" seat
-# enable seatd daemon
-systemctl enable seatd.service
-
 # backup boot partition on kernel updates (see arch wiki page "System backup#Snapshots and /boot partition")
 mkdir /etc/pacman.d/hooks
 cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
@@ -240,11 +251,6 @@ systemctl enable man-db.timer
 #sed -i 's/#AutoEnable=true/AutoEnable=false/' /etc/bluetooth/main.conf
 # turn on bluetooth when launching blueman
 #gsettings set org.blueman.plugins.powermanager auto-power-on false
-
-# configure printing
-systemctl enable avahi-daemon.service
-sed -i 's/mymachines/mymachines mdns_minimal [NOTFOUND=return]/' /etc/nsswitch.conf
-systemctl enable cups.socket
 
 # configure mlocate
 sed -i 's/PRUNEPATHS = "/PRUNEPATHS = "\/.snapshots /' /etc/updatedb.conf
@@ -306,8 +312,19 @@ su -c "mkdir /home/$userName/.config" "$userName"
 # create .bin directory for user
 su -c "mkdir /home/$userName/.bin" "$userName"
 
+# enable sway 
+# add user to seat group
+gpasswd -a "$userName" seat
+# enable seatd daemon
+systemctl enable seatd.service
+
 # configure pacman
 sed -i 's/#Color/Color/' /etc/pacman.conf
+
+# configure printing
+systemctl enable avahi-daemon.service
+sed -i 's/mymachines/mymachines mdns_minimal [NOTFOUND=return]/' /etc/nsswitch.conf
+systemctl enable cups.socket
 
 # disable power saving mode for sound card
 #sed -i 's/load-module module-suspend-on-idle/#load-module module-suspend-on-idle/' /etc/pulse/default.pa
@@ -316,7 +333,6 @@ sed -i 's/#Color/Color/' /etc/pacman.conf
 libvirtExists=$(pacman -Qqs libvirt)
 if [ -z "$libvirtExists" ]
 then
-    #sleep 1
     continue
 else
     # allow any user in the wheel group to start and stop libvirtd.service (for sway compatibility)
