@@ -23,7 +23,6 @@
 # user should specify disks in the order they want (osdisk1 should be the 1st listed, osdisk2 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
-# configure script to work if there are no data disks
 # change rootPaths and dataPaths to rootlvPaths and datalvPaths???
 
 
@@ -942,15 +941,6 @@ then
 fi
 
 
-
-
-
-
-#####################################################
-# start: needs to work if there are no datadisks
-#####################################################
-
-
 # create directories to mount filesystems
 printf "\e[1;32m\nCreating directories to mount filesystems\n\e[0m"
 sleep 3
@@ -983,12 +973,6 @@ if [ "${#dataDisks[@]}" -ne 0 ]
 then
     mount -o noatime,compress=zstd,space_cache=v2,subvol=@data /dev/"${datavolgroupNames[0]}"/"${datalvNames[0]}" /mnt/data
 fi
-
-
-#####################################################
-# end: needs to work if there are no datadisks
-#####################################################
-
 
 
 
