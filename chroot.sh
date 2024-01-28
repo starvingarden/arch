@@ -111,7 +111,7 @@ locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 
-# set the keymap
+# set the keymap for the sd-vconsole hook
 echo -e "KEYMAP=$keyMap" > /etc/vconsole.conf
 
 
@@ -169,7 +169,7 @@ sed -i 's|FILES=()|FILES=(/root/crypt-keys/crypt-key.keyfile)|' /etc/mkinitcpio.
 sed -i '/^HOOKS=/ s/udev/systemd/' /etc/mkinitcpio.conf
 # remove the "consolefont" hook (see arch wiki page "dm-crypt/Encrypting an entire system#Encrypted boot partition (GRUB)")
 sed -i '/^HOOKS=/ s/consolefont //g' /etc/mkinitcpio.conf
-# change the "keymap" hook to the "sd-vconsole" hook (in /etc/vconsole.conf add the line "KEYMAP=us")
+# change the "keymap" hook to the "sd-vconsole" hook
 sed -i '/^HOOKS=/ s/keymap/sd-vconsole/' /etc/mkinitcpio.conf
 # add/move additional hooks
 # add the sd-encrypt and lvm2 hooks before the filesystems hook for encryption support (see arch wiki pages "dm-crypt/System configuration#mkinitcpio" and "dm-crypt/Encrypting an entire system#LVM on LUKS")
