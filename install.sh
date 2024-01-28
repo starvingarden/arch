@@ -295,7 +295,7 @@ fi
 
 
 # set processor vendor
-processorVendor=$(neofetch --cpu_brand on | grep -i 'cpu' | grep -Eio 'amd|intel' | awk '{print tolower($0)}')
+processorVendor=$(neofetch --cpu_brand on | grep -i 'cpu' | grep -Eio 'amd|intel' | awk '{print tolower($0)}' | head -n 1)
 if [ -z "$processorVendor" ]
 then
     processorVendor=null
@@ -304,7 +304,7 @@ fi
 
 
 # set graphics vendor
-graphicsVendor=$(neofetch --gpu_brand on | grep -i 'gpu' | grep -Eio 'amd|intel|nvidia' | awk '{print tolower($0)}')
+graphicsVendor=$(neofetch --gpu_brand on | grep -i gpu | grep -Eio 'amd|intel|nvidia' | awk '{print tolower($0)}' | head -n 1)
 if [ -z "$graphicsVendor" ]
 then
     graphicsVendor=null
