@@ -23,8 +23,7 @@
 # user should specify disks in the order they want (osdisk0 should be the 1st listed, osdisk1 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
-# change efiNames, swapNames, and rootNames to efifsNames, swapfsNames, and rootfsNames???
-# change rootPaths and dataPaths to rootlvPaths and datalvPaths???
+# change efiNames, swapNames, rootNames, and dataNames to efifsNames, swapfsNames, rootfsNames, and datafsNames???
 
 
 
@@ -406,28 +405,28 @@ done
 # set os filesystem names
 # used to name os filesystems
 # create empty arrays for os filesystem names
-efiNames=()
-swapNames=()
-rootNames=()
+efifsNames=()
+swapfsNames=()
+rootfsNames=()
 # set os filesystem names
 for element in "${!osDisks[@]}"
 do
-    efiNames+=(efi"$element")
-    swapNames+=(swap"$element")
+    efifsNames+=(efi"$element")
+    swapfsNames+=(swap"$element")
     # set non-RAID root filesystem name
     if [ "$osRaid" == false ]
     then
-        rootNames=(root)
+        rootfsNames=(rootfs)
     fi
     # set RAID1 root filesystem name
     if [ "$osRaid" == true ]
     then
-        rootNames=(rootraid)
+        rootfsNames=(rootraidfs)
     fi
 done
-# non-root os filesystem names should be in the form of "efi0", "efi1", "swap0", "swap1", etc.
-# a non-RAID root filesystems should be "root"
-# a RAID1 root filesystem should be "rootraid"
+# non-root os filesystem names should be in the form of "efifs0", "efifs1", "swapfs0", "swapfs1", etc.
+# a non-RAID root filesystem name should be "rootfs"
+# a RAID1 root filesystem name should be "rootraidfs"
 
 
 # set array for all root logical volume paths
@@ -513,19 +512,19 @@ done
 # set data filesystem name(s)
 # used to name data filesystem(s)
 # create empty array for data filesystem names
-dataNames=()
+datafsNames=()
 # set non-RAID data filesystem name
 if [ "$dataRaid" == false ]
 then
-    dataNames=(data)
+    datafsNames=(datafs)
 fi
 # set RAID1 data filesystem name
 if [ "$dataRaid" == true ]
 then
-    dataNames=(dataraid)
+    datafsNames=(dataraidfs)
 fi
-# a non-RAID data fileystem should be "data"
-# a RAID1 data filesystem should be "dataraid"
+# a non-RAID data fileystem should be "datafs"
+# a RAID1 data filesystem should be "dataraidfs"
 
 
 # set array for all data logical volume paths
@@ -551,7 +550,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, root logical volume paths=${rootlvPaths[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]}, data logical volume paths=${datalvPaths[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efifsNames[@]} ${swapfsNames[@]} ${rootfsNames[@]}, root logical volume paths=${rootlvPaths[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${datafsNames[@]}, data logical volume paths=${datalvPaths[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -667,19 +666,19 @@ do
     echo "rootlvNames+=($element)" >> ./variables.txt
 done
 
-for element in "${efiNames[@]}"
+for element in "${efifsNames[@]}"
 do
-    echo "efiNames+=($element)" >> ./variables.txt
+    echo "efifsNames+=($element)" >> ./variables.txt
 done
 
-for element in "${swapNames[@]}"
+for element in "${swapfsNames[@]}"
 do
-    echo "swapNames+=($element)" >> ./variables.txt
+    echo "swapfsNames+=($element)" >> ./variables.txt
 done
 
-for element in "${rootNames[@]}"
+for element in "${rootfsNames[@]}"
 do
-    echo "rootNames+=($element)" >> ./variables.txt
+    echo "rootfsNames+=($element)" >> ./variables.txt
 done
 
 for element in "${rootlvPaths[@]}"
@@ -717,9 +716,9 @@ do
     echo "datalvNames+=($element)" >> ./variables.txt
 done
 
-for element in "${dataNames[@]}"
+for element in "${datafsNames[@]}"
 do
-    echo "dataNames+=($element)" >> ./variables.txt
+    echo "datafsNames+=($element)" >> ./variables.txt
 done
 
 for element in "${datalvPaths[@]}"
@@ -879,23 +878,23 @@ sleep 3
 # create efi filesystem(s)
 for element in "${!osDisks[@]}"
 do
-    yes | mkfs.fat -F 32 -n "${efiNames[$element]}" /dev/"${efiPartitions[$element]}"
+    yes | mkfs.fat -F 32 -n "${efifsNames[$element]}" /dev/"${efiPartitions[$element]}"
 done
 # create swap filesystem(s)
 for element in "${!osDisks[$element]}"
 do
-    mkswap -L "${swaplvNames[$element]}" /dev/"${osvolgroupNames[$element]}"/"${swaplvNames[$element]}"
+    mkswap -L "${swapfsNames[$element]}" /dev/"${osvolgroupNames[$element]}"/"${swaplvNames[$element]}"
 done
 # create root filesystem
 # create non-RAID root filesystem
 if [ "$osRaid" == false ]
 then
-    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m dup -d single "${rootlvPaths[@]}"
+    yes | mkfs.btrfs -L "${rootfsNames[@]}" -f -m dup -d single "${rootlvPaths[@]}"
 fi
 # create RAID1 root filesystem
 if [ "$osRaid" == true ]
 then
-    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m raid1 -d raid1 "${rootlvPaths[@]}"
+    yes | mkfs.btrfs -L "${rootfsNames[@]}" -f -m raid1 -d raid1 "${rootlvPaths[@]}"
 fi
 # create data filesystems if necessary
 if [ "${#dataDisks[@]}" -ne 0 ]
@@ -903,12 +902,12 @@ then
     # create non-RAID data filesystem
     if [ "$dataRaid" == false ]
     then
-        yes | mkfs.btrfs -L "${dataNames[@]}" -f -m dup -d single "${datalvPaths[@]}"
+        yes | mkfs.btrfs -L "${datafsNames[@]}" -f -m dup -d single "${datalvPaths[@]}"
     fi
     # create RAID1 data filesystem
     if [ "$dataRaid" == true ]
     then
-        yes | mkfs.btrfs -L "${dataNames[@]}" -f -m raid1 -d raid1 "${datalvPaths[@]}"
+        yes | mkfs.btrfs -L "${datafsNames[@]}" -f -m raid1 -d raid1 "${datalvPaths[@]}"
     fi
 fi
 
