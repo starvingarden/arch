@@ -23,7 +23,6 @@
 # user should specify disks in the order they want (osdisk0 should be the 1st listed, osdisk1 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
-# change efiNames, swapNames, rootNames, and dataNames to efifsNames, swapfsNames, rootfsNames, and datafsNames???
 
 
 
@@ -513,15 +512,19 @@ done
 # used to name data filesystem(s)
 # create empty array for data filesystem names
 datafsNames=()
-# set non-RAID data filesystem name
-if [ "$dataRaid" == false ]
+# only set data filesystem names if using data disks
+if [ "${#dataDisks[@]}" -gt 0 ]
 then
-    datafsNames=(datafs)
-fi
-# set RAID1 data filesystem name
-if [ "$dataRaid" == true ]
-then
-    datafsNames=(dataraidfs)
+    # set non-RAID data filesystem name
+    if [ "$dataRaid" == false ]
+    then
+        datafsNames=(datafs)
+    fi
+    # set RAID1 data filesystem name
+    if [ "$dataRaid" == true ]
+    then
+        datafsNames=(dataraidfs)
+    fi
 fi
 # a non-RAID data fileystem should be "datafs"
 # a RAID1 data filesystem should be "dataraidfs"
