@@ -23,6 +23,7 @@
 # user should specify disks in the order they want (osdisk0 should be the 1st listed, osdisk1 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
+# change efiNames, swapNames, and rootNames to efifsNames, swapfsNames, and rootfsNames???
 # change rootPaths and dataPaths to rootlvPaths and datalvPaths???
 
 
@@ -429,14 +430,14 @@ done
 # a RAID1 root filesystem should be "rootraid"
 
 
-# set array for all root filesystem paths
+# set array for all root logical volume paths
 # used when creating filesystems
-# create empty array for all root filesystem paths
-rootPaths=()
-# set root filesystem paths
+# create empty array for all root logical volume paths
+rootlvPaths=()
+# set root logical volume paths
 for element in "${!osDisks[@]}"
 do
-    rootPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
+    rootlvPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
 done
 
 
@@ -550,7 +551,7 @@ done
 #echo -e "\n\n"
 while true
 do
-    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, root filesystem paths=${rootPaths[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]}, data filesystem paths=${dataPaths[@]}"
+    echo -e "arch URL=$archURL, virtual machine=$virtualMachine, laptop=$laptopInstall, processor vendor=$processorVendor, graphics vendor=$graphicsVendor, ram size=$ramSize, os disks=${osDisks[@]}, efi partitions=${efiPartitions[@]}, crypt os partitions=${cryptosPartitions[@]}, efi partition names=${efipartitionNames[@]}, crypt os partition names=${cryptospartitionNames[@]}, os encrypted container names=${osencryptedcontainerNames[@]}, os volume group names=${osvolgroupNames[@]}, os logical volume names=${swaplvNames[@]} ${rootlvNames[@]}, os filesystem names=${efiNames[@]} ${swapNames[@]} ${rootNames[@]}, root logical volume paths=${rootlvPaths[@]}, crypt data partitions=${cryptdataPartitions[@]}, crypt data partition names=${cryptdatapartitionNames[@]}, data encrypted container names=${dataencryptedcontainerNames[@]}, data volume group names=${datavolgroupNames[@]}, data logical volume names=${datalvNames[@]}, data filesystem names=${dataNames[@]}, data filesystem paths=${dataPaths[@]}"
     read -rp $'\n'"Are the variables for system information correct? [Y/n] " systemInformation
     systemInformation=${systemInformation:-Y}
     case $systemInformation in
@@ -681,9 +682,9 @@ do
     echo "rootNames+=($element)" >> ./variables.txt
 done
 
-for element in "${rootPaths[@]}"
+for element in "${rootlvPaths[@]}"
 do
-    echo "rootPaths+=($element)" >> ./variables.txt
+    echo "rootlvPaths+=($element)" >> ./variables.txt
 done
 
 for element in "${dataDisks[@]}"
@@ -889,12 +890,12 @@ done
 # create non-RAID root filesystem
 if [ "$osRaid" == false ]
 then
-    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m dup -d single "${rootPaths[@]}"
+    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m dup -d single "${rootlvPaths[@]}"
 fi
 # create RAID1 root filesystem
 if [ "$osRaid" == true ]
 then
-    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m raid1 -d raid1 "${rootPaths[@]}"
+    yes | mkfs.btrfs -L "${rootNames[@]}" -f -m raid1 -d raid1 "${rootlvPaths[@]}"
 fi
 # create data filesystems if necessary
 if [ "${#dataDisks[@]}" -ne 0 ]
