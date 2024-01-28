@@ -309,7 +309,7 @@ rm /home/"$userName"/.customconfig
 # create .config directory for user
 su -c "mkdir /home/$userName/.config" "$userName"
 
-# create .bin directory for user
+# create .bin directory for user and add to PATH for user
 su -c "mkdir /home/$userName/.bin" "$userName"
 
 # enable sway 
@@ -331,10 +331,8 @@ systemctl enable cups.socket
 
 # configure virtual machine manager (libvirt) if package is installed
 libvirtExists=$(pacman -Qqs libvirt)
-if [ -z "$libvirtExists" ]
+if [ -n "$libvirtExists" ]
 then
-    continue
-else
     # allow any user in the wheel group to start and stop libvirtd.service (for sway compatibility)
     echo -e "%wheel ALL=(ALL) NOPASSWD: /usr/bin/systemctl start libvirtd.service" >> /etc/sudoers.d/libvirt
     echo -e "%wheel ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop libvirtd.service" >> /etc/sudoers.d/libvirt
@@ -342,11 +340,8 @@ fi
 
 # configure jackett is package is installed
 jackettExists=$(pacman -Qqs jackett)
-if [ -z "$jackettExists" ]
+if [ -n "$jackettExists" ]
 then
-    #sleep 1
-    continue
-else
     # allow any user in the wheel group to start and stop jackett.service (for sway compatibility)
     echo -e "%wheel ALL=(ALL) NOPASSWD: /usr/bin/systemctl start jackett.service" >> /etc/sudoers.d/jackett
     echo -e "%wheel ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop jackett.service" >> /etc/sudoers.d/jackett
