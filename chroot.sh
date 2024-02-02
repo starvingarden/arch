@@ -199,7 +199,7 @@ printf "\e[1;32m\nConfiguring grub\n\e[0m"
 sleep 3
 # edit /etc/default/grub
 # set grub timeout
-sed -i 's/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT=3/' /etc/default/grub
+sed -i 's/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT=10/' /etc/default/grub
 # enable booting from encrypted devices
 sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 # add the following kernel parameters
