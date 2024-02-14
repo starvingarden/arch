@@ -80,7 +80,7 @@ paru -S --needed pipewire pipewire-alsa pipewire-audio pipewire-docs pipewire-ja
 ####################
 
 # official repo
-paru -S --needed blueberry bluez bluez-utils
+paru -S --needed blueman
 # aur
 #none
 
