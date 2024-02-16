@@ -37,7 +37,7 @@ paru -S --needed cheat
 #######
 
 # official repo
-paru -S --needed bat bc cpupower firewalld fzf gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages mlocate nano neovim networkmanager-openvpn net-tools tealdeer thefuck trash-cli turbostat unzip zip zoxide
+paru -S --needed bat bc firewalld fzf gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages mlocate nano neovim networkmanager-openvpn net-tools tealdeer thefuck trash-cli turbostat unzip zip zoxide
 # aur
 #none
 
