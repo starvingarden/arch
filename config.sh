@@ -232,6 +232,9 @@ cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
 # enable clock sync
 systemctl enable systemd-timesyncd.service
 
+# enable cpupower
+systemctl enable cpupower.service
+
 # enable paccache
 systemctl enable paccache.timer
 
