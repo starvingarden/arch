@@ -60,7 +60,7 @@ paru -S --needed nerd-fonts noto-fonts-emoji otf-font-awesome
 ############################################
 
 # official repo
-paru -S --needed cpupower iio-sensor-proxy light powertop
+paru -S --needed cpupower iio-sensor-proxy light
 # aur
 #none
 
