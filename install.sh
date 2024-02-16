@@ -23,6 +23,7 @@
 # user should specify disks in the order they want (osdisk0 should be the 1st listed, osdisk1 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
+# run a script every so often to check battery level and charging status and hibernate if necessary
 
 
 
