@@ -278,12 +278,6 @@ then
     # enable hibernate on low battery (see arch wiki page "Laptop#Hibernate on low battery level")
     cp /home/"$userName"/arch/files/99-lowbat.rules /etc/udev/rules.d
     
-    # configure powertop
-    # save and enable powertop custom systemd unit
-    #cp /home/"$userName"/arch/files/systemd/system/powertop/powertop.service /etc/systemd/system
-    #systemctl daemon-reload
-    #systemctl enable powertop.service
-    
     # configure tlp
     #sed -i 's/#PCIE_ASPM_ON_BAT=default/PCIE_ASPM_ON_BAT=powersupersave/' /etc/tlp.conf    
 fi
