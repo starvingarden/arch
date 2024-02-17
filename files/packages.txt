@@ -27,7 +27,7 @@ paru
 ####################
 
 # official repo
-paru -S --needed arch-wiki-docs arch-wiki-lite bash-completion cpupower exfatprogs flatpak ifuse libimobiledevice npm ntfs-3g python-pip
+paru -S --needed arch-wiki-docs arch-wiki-lite bash-completion exfatprogs flatpak ifuse libimobiledevice npm ntfs-3g python-pip
 # aur
 paru -S --needed cheat
 
@@ -37,7 +37,7 @@ paru -S --needed cheat
 #######
 
 # official repo
-paru -S --needed bat bc firewalld fzf gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages mlocate nano neovim networkmanager-openvpn net-tools tealdeer thefuck trash-cli turbostat unzip zip zoxide
+paru -S --needed acpi bat bc cpupower firewalld fzf gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages mlocate nano neovim networkmanager-openvpn net-tools tealdeer thefuck trash-cli turbostat unzip zip zoxide
 # aur
 #none
 
