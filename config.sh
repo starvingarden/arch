@@ -251,9 +251,7 @@ systemctl enable man-db.timer
 # configure bluetooth
 #systemctl enable bluetooth.service
 # dont turn on bluetooth on boot
-#sed -i 's/#AutoEnable=true/AutoEnable=false/' /etc/bluetooth/main.conf
-# turn on bluetooth when launching blueman
-#gsettings set org.blueman.plugins.powermanager auto-power-on false
+sed -i 's/#AutoEnable=true/AutoEnable=false/' /etc/bluetooth/main.conf
 
 # configure mlocate
 sed -i 's/PRUNEPATHS = "/PRUNEPATHS = "\/.snapshots /' /etc/updatedb.conf
