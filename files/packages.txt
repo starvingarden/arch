@@ -47,7 +47,7 @@ paru -S --needed acpi bat bc cpupower firewalld fzf gnupg hwinfo inotify-tools l
 ##################
 
 # official repo
-pacman -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes-extra gtk2 gtk3 gtk4 qt5-base qt5-wayland qt6-base qt6-wayland seatd sway swaybg swayidle waybar wayland wayland-docs wayland-utils wl-clipboard xorg-xwayland
+pacman -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes-extra gtk2 gtk3 gtk4 qt5-base qt5-wayland qt6-base qt6-wayland seahorse seatd sway swaybg swayidle waybar wayland wayland-docs wayland-utils wl-clipboard xorg-xwayland
 # aur
 paru -S --needed autotiling swaylock-effects ttf-ms-win11 wl-clip-persist-git
 
@@ -100,7 +100,7 @@ paru -S --needed avahi cups cups-pdf foomatic-db-ppds foomatic-db-nonfree-ppds n
 ###################
 
 # official repo
-paru -S --needed alacritty android-tools bitwarden bleachbit blender btop clamav clonezilla discord easyeffects feh gammastep gedit gimp glow gnome-disk-utility handbrake handlr libreoffice-fresh lutris mako minetest mkvtoolnix-cli mpv nautilus neofetch nm-connection-editor nnn nvtop obs-studio shellcheck openshot pavucontrol qbittorrent qemu-full seahorse steam units vlc xournalpp zathura
+paru -S --needed alacritty android-tools bitwarden bleachbit blender btop clamav clonezilla discord easyeffects feh gammastep gedit gimp glow gnome-disk-utility handbrake handlr libreoffice-fresh lutris mako minetest mkvtoolnix-cli mpv nautilus neofetch nm-connection-editor nnn nvtop obs-studio shellcheck openshot pavucontrol qbittorrent qemu-full steam units vlc xournalpp zathura
 # aur
 paru -S --needed appimagelauncher cava cbonsai downgrade hollywood jackett joplin-desktop librewolf-bin makemkv mullvad-vpn-cli phoronix-test-suite prismlauncher soundcloud-dl spacecadetpinball-git spotify tor-browser upscayl-bin ventoy-bin xdg-ninja
 
