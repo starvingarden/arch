@@ -160,6 +160,10 @@ do
 done
 
 
+################################################################################
+# add "microcode" to mkinitcpio hooks????? (see arch wiki news about mkinitcpio hook) (see microcode arch wiki page)
+
+
 # configure mkinitcpio.conf (see the following arch wiki pages)
 # dm-crypt/Encrypting an entire system
 printf "\e[1;32m\nConfiguring initcpio\n\e[0m"
