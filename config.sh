@@ -235,6 +235,7 @@ systemctl enable systemd-timesyncd.service
 # enable cpupower
 systemctl enable cpupower.service
 
+# automatically clean pacman package cache weekly
 # enable paccache
 systemctl enable paccache.timer
 
