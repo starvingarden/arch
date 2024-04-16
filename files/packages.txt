@@ -7,15 +7,20 @@
 
 
 
-# install yay
-#############
+# install and configure yay
+###########################
 
+# install yay
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -cris
 cd
 rm -rf yay
+# configure yay
 yay
+# run yay
+yay
+
 
 
 
