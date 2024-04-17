@@ -7,36 +7,23 @@
 
 
 
-# install and configure yay
-###########################
-
-# install yay
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -cris
-cd
-rm -rf yay
-# configure yay
-yay
-# run yay
-yay
-
-
-
-
 # install and configure paru
 ############################
 
-#git clone https://aur.archlinux.org/paru.git
-#cd paru
-#makepkg -cris
-#cd
-#rm -rf paru
-#sudo sed -i 's/#BottomUp/BottomUp/' /etc/paru.conf
-#sudo sed -i 's/#RemoveMake/RemoveMake = yes/' /etc/paru.conf
-#sudo sed -i 's/#CleanAfter/CleanAfter/' /etc/paru.conf
-#sudo sed -i 's/#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
-#paru
+# install paru
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -cris
+cd
+sudo pacman -U paru
+rm -rf paru
+# configure paru
+sudo sed -i 's/#BottomUp/BottomUp/' /etc/paru.conf
+sudo sed -i 's/#RemoveMake/RemoveMake = yes/' /etc/paru.conf
+sudo sed -i 's/#CleanAfter/CleanAfter/' /etc/paru.conf
+sudo sed -i 's/#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
+# run paru
+paru
 
 
 
