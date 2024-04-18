@@ -15,7 +15,6 @@ git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -cris
 cd
-sudo pacman -U paru
 rm -rf paru
 # configure paru
 sudo sed -i 's/#BottomUp/BottomUp/' /etc/paru.conf
