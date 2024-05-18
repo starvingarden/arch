@@ -105,7 +105,7 @@ yay -S --needed avahi cups cups-pdf foomatic-db-ppds foomatic-db-nonfree-ppds ns
 # official repo
 yay -S --needed alacritty android-tools bitwarden bleachbit blender btop clamav clonezilla discord easyeffects feh gammastep gedit gimp glow gnome-disk-utility handbrake handlr libreoffice-fresh lutris mako minetest mkvtoolnix-cli mpv nautilus neofetch nm-connection-editor nnn nvtop obs-studio shellcheck openshot pavucontrol qbittorrent qemu-full steam units vlc xournalpp zathura
 # aur
-yay -S --needed appimagelauncher cava cbonsai downgrade hollywood jackett joplin-desktop librewolf-bin makemkv mullvad-vpn-cli phoronix-test-suite prismlauncher soundcloud-dl spacecadetpinball-git spotify tor-browser-bin upscayl-bin ventoy-bin xdg-ninja
+yay -S --needed appimagelauncher cava cbonsai downgrade hollywood jackett librewolf-bin makemkv mullvad-vpn-cli notesnook-bin phoronix-test-suite prismlauncher soundcloud-dl spacecadetpinball-git spotify tor-browser-bin upscayl-bin ventoy-bin xdg-ninja
 
 
 
