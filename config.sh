@@ -139,10 +139,10 @@ mkdir /.snapshots/root/daily
 mkdir /.snapshots/home/daily
 mkdir /.snapshots/root/weekly
 mkdir /.snapshots/home/weekly
-mkdir /.snapshots/root/monthly
-mkdir /.snapshots/home/monthly
-mkdir /.snapshots/root/yearly
-mkdir /.snapshots/home/yearly
+#mkdir /.snapshots/root/monthly
+#mkdir /.snapshots/home/monthly
+#mkdir /.snapshots/root/yearly
+#mkdir /.snapshots/home/yearly
 
 # set permissions for /.snapshot directory
 chmod -R 700 /.snapshots
@@ -174,15 +174,15 @@ sed -i 's/MAXSNAPSHOTCOUNT/7/' /usr/local/bin/snapshot-daily.sh
 
 cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-weekly.sh
 sed -i 's/SNAPSHOTFREQUENCY/weekly/' /usr/local/bin/snapshot-weekly.sh
-sed -i 's/MAXSNAPSHOTCOUNT/10/' /usr/local/bin/snapshot-weekly.sh
+sed -i 's/MAXSNAPSHOTCOUNT/4/' /usr/local/bin/snapshot-weekly.sh
 
-cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-monthly.sh
-sed -i 's/SNAPSHOTFREQUENCY/monthly/' /usr/local/bin/snapshot-monthly.sh
-sed -i 's/MAXSNAPSHOTCOUNT/12/' /usr/local/bin/snapshot-monthly.sh
+#cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-monthly.sh
+#sed -i 's/SNAPSHOTFREQUENCY/monthly/' /usr/local/bin/snapshot-monthly.sh
+#sed -i 's/MAXSNAPSHOTCOUNT/12/' /usr/local/bin/snapshot-monthly.sh
 
-cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-yearly.sh
-sed -i 's/SNAPSHOTFREQUENCY/yearly/' /usr/local/bin/snapshot-yearly.sh
-sed -i 's/MAXSNAPSHOTCOUNT/3/' /usr/local/bin/snapshot-yearly.sh
+#cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-yearly.sh
+#sed -i 's/SNAPSHOTFREQUENCY/yearly/' /usr/local/bin/snapshot-yearly.sh
+#sed -i 's/MAXSNAPSHOTCOUNT/3/' /usr/local/bin/snapshot-yearly.sh
 
 
 
