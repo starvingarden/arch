@@ -24,7 +24,7 @@
 # kpartx command to use disks that are already configured
 # use persistent block device naming for initramfs and grub configuration
 # run a script every so often to check battery level and charging status and hibernate if necessary
-# make scripts to push/pull all desired dotfiles to/from github. Also create scripts for scripts and systemd
+# to manage dotfiles, scripts, and systemd, either make scripts to push/pull all desired files to/from github, or use symlinks
 
 
 
