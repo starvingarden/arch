@@ -254,8 +254,6 @@ chmod +x /home/"$userName"/config.sh
 # set global environment variables
 if [ "$virtualMachine" == true ]
 then
-    #echo -e "\n# enables mouse cursor on virtual machines"    >>  /etc/environment
-    #echo -e "WLR_NO_HARDWARE_CURSORS=1"                       >>  /etc/environment
     #echo -e "\n# enables mouse cursor on virtual machines"    >>  /etc/bash.bashrc
     #echo -e "WLR_NO_HARDWARE_CURSORS=1"                       >>  /etc/bash.bashrc
     sleep 1
