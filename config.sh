@@ -156,51 +156,6 @@ su -c "mkdir /not-snapped/$userName/downloading" "$userName"
 
 
 
-# configure btrfs scripts         (make 1 script that properly names all snapshots)
-chmod +x /home/"$userName"/arch/files/scripts/btrfs/*
-cp /home/"$userName"/arch/files/scripts/btrfs/* /usr/local/bin
-
-cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-pre-update.sh
-sed -i 's/SNAPSHOTFREQUENCY/pre-update/' /usr/local/bin/snapshot-pre-update.sh
-sed -i 's/MAXSNAPSHOTCOUNT/10/' /usr/local/bin/snapshot-pre-update.sh
-
-cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-hourly.sh
-sed -i 's/SNAPSHOTFREQUENCY/hourly/' /usr/local/bin/snapshot-hourly.sh
-sed -i 's/MAXSNAPSHOTCOUNT/24/' /usr/local/bin/snapshot-hourly.sh
-
-cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-daily.sh
-sed -i 's/SNAPSHOTFREQUENCY/daily/' /usr/local/bin/snapshot-daily.sh
-sed -i 's/MAXSNAPSHOTCOUNT/7/' /usr/local/bin/snapshot-daily.sh
-
-cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-weekly.sh
-sed -i 's/SNAPSHOTFREQUENCY/weekly/' /usr/local/bin/snapshot-weekly.sh
-sed -i 's/MAXSNAPSHOTCOUNT/4/' /usr/local/bin/snapshot-weekly.sh
-
-#cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-monthly.sh
-#sed -i 's/SNAPSHOTFREQUENCY/monthly/' /usr/local/bin/snapshot-monthly.sh
-#sed -i 's/MAXSNAPSHOTCOUNT/12/' /usr/local/bin/snapshot-monthly.sh
-
-#cp /usr/local/bin/snapshot.sh /usr/local/bin/snapshot-yearly.sh
-#sed -i 's/SNAPSHOTFREQUENCY/yearly/' /usr/local/bin/snapshot-yearly.sh
-#sed -i 's/MAXSNAPSHOTCOUNT/3/' /usr/local/bin/snapshot-yearly.sh
-
-
-
-# configure btrfs systemd units
-cp -r /home/"$userName"/arch/files/systemd/system/btrfs/snapshots/* /etc/systemd/system
-systemctl daemon-reload
-systemctl enable snapshot-hourly.timer
-systemctl enable snapshot-daily.timer
-systemctl enable snapshot-weekly.timer
-#systemctl enable snapshot-monthly.timer
-#systemctl enable snapshot-yearly.timer
-
-# take snapshots before config.sh
-btrfs subvolume snapshot -r / /.snapshots/root/pre-update/before-config.sh
-btrfs subvolume snapshot -r /home /.snapshots/home/pre-update/before-config.sh
-
-
-
 
 
 
