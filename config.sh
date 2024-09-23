@@ -225,9 +225,6 @@ then
     # allow user to change screen brightness
     gpasswd -a "$userName" video
     
-    # enable hibernate on low battery (see arch wiki page "Laptop#Hibernate on low battery level")
-    cp /home/"$userName"/arch/files/99-lowbat.rules /etc/udev/rules.d
-    
     # configure tlp
     #sed -i 's/#PCIE_ASPM_ON_BAT=default/PCIE_ASPM_ON_BAT=powersupersave/' /etc/tlp.conf    
 fi
