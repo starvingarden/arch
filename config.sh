@@ -176,10 +176,6 @@ sleep 3
 # create a symlink so that flatpaks are in /usr/share/applications
 #ln -s /var/lib/flatpak /usr/share/applications
 
-# backup boot partition on kernel updates (see arch wiki page "System backup#Snapshots and /boot partition")
-mkdir /etc/pacman.d/hooks
-cp /home/"$userName"/arch/files/95-bootbackup.hook /etc/pacman.d/hooks
-
 # set systemd default target
 ########## see what the default target is out of the box
 #systemctl set-default graphical.target
