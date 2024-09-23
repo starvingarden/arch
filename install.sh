@@ -28,6 +28,7 @@
 # make a script/git repo for system files similar to scripts
 # add scripts to PATH in /etc/profile
 # change directory name /.snapshots/backups to /.snapshots/tmp??
+# make systemd service that hibernates on low battery
 
 
 
