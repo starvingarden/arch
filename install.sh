@@ -27,6 +27,7 @@
 # make a "variables" file for user to manually enter variables into, instead of editing the install.sh file, edit the variables.txt file
 # make a script/git repo for system files similar to scripts
 # add scripts to PATH in /etc/profile
+# change directory name /.snapshots/backups to /.snapshots/tmp??
 
 
 
