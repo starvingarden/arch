@@ -302,69 +302,6 @@ gpasswd -a "$userName" input
 
 
 
-# save and enable custom systemd units
-######################################
-
-# system units
-##############
-
-# malware scanner
-cp /home/"$userName"/arch/files/systemd/system/malware/malware.service /etc/systemd/system
-cp /home/"$userName"/arch/files/systemd/system/malware/malware.timer /etc/systemd/system
-systemctl daemon-reload
-systemctl enable malware.timer
-
-# sleep
-cp -r /home/"$userName"/arch/files/systemd/system/sleep/sleep.conf.d /etc/systemd
-cp -r /home/"$userName"/arch/files/systemd/system/sleep/logind.conf.d /etc/systemd
-systemctl daemon-reload
-
-
-
-# user units
-############
-
-# nnn plugins
-cp /home/"$userName"/arch/files/systemd/user/nnnplugins/nnnplugins.service /etc/systemd/user
-cp /home/"$userName"/arch/files/systemd/user/nnnplugins/nnnplugins.timer /etc/systemd/user
-systemctl --user daemon-reload
-systemctl --global enable nnnplugins.timer
-
-
-
-# system and user units
-#######################
-
-# tealdeer
-cp /home/"$userName"/arch/files/systemd/both/tealdeer/tealdeer.service /etc/systemd/system
-cp /home/"$userName"/arch/files/systemd/both/tealdeer/tealdeer.timer /etc/systemd/system
-cp /home/"$userName"/arch/files/systemd/both/tealdeer/tealdeer.service /etc/systemd/user
-cp /home/"$userName"/arch/files/systemd/both/tealdeer/tealdeer.timer /etc/systemd/user
-systemctl daemon-reload
-systemctl --user daemon-reload
-systemctl enable tealdeer.timer
-systemctl --global enable tealdeer.timer
-
-# trash
-cp /home/"$userName"/arch/files/systemd/both/trash/trash.service /etc/systemd/system
-cp /home/"$userName"/arch/files/systemd/both/trash/trash.timer /etc/systemd/system
-cp /home/"$userName"/arch/files/systemd/both/trash/trash.service /etc/systemd/user
-cp /home/"$userName"/arch/files/systemd/both/trash/trash.timer /etc/systemd/user
-systemctl daemon-reload
-systemctl --user daemon-reload
-systemctl enable trash.timer
-systemctl --global enable trash.timer
-
-fi
-
-
-
-
-
-
-
-
-
 
 # remove files, and reboot
 ##########################
