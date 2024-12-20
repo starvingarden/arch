@@ -50,7 +50,7 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
     - Read the input prompts carefully.
     - You can cancel the script at any time with `Ctrl+c`
 
-# ToDo
+# To Do
 
 - [x] btrfs filesystem with automatic snapshots, cleanup, and rollback
 - [x] full disk encryption
