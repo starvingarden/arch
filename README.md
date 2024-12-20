@@ -1,11 +1,8 @@
 # Description
 
-- This is a bash script that installs Arch Linux automatically. Read the details section below for important information on how the system will be configured.
+- This is a bash script that installs Arch Linux automatically.
 - Read the "Details" section below for important information on how the system will be configured.
 - Read the "Usage" section below for important information on how to run the script.
-- The installation includes printing capabilities, bluetooth, automatic recommended system maintenance, and automatic snapshots of / and /home directories.
-- The "install.sh" script will ask if you want to include the repo owners custom configurations. For details on what this includes, see the "custom configurations" section in the "config.sh" script
-- Cancel the installation at any time with "Ctrl+c"
 
 # Details
 
@@ -18,6 +15,8 @@
     - dotfiles.sh
         - saves necessary dotfiles and pushes them to the online git repo
         - must be run from inside the arch repo
+- The installation includes printing capabilities, bluetooth, automatic recommended system maintenance, and automatic snapshots of / and /home directories.
+- The "install.sh" script will ask if you want to include the repo owners custom configurations. For details on what this includes, see the "custom configurations" section in the "config.sh" script
 
 # Usage
 
@@ -48,7 +47,8 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
     - `nano install.sh` or `vim install.sh`
 7. `chmod +x ./install.sh`
 8. `./install.sh`
-    - Read the input prompts carefully. This will install arch linux, along with the sway tiling window manager
+    - Read the input prompts carefully.
+    - You can cancel the script at any time with `Ctrl+c`
 
 # ToDo
 
