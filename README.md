@@ -1,4 +1,4 @@
-## Description
+### Description
 
 - This is a bash script that installs Arch Linux automatically. Read the details section below for important information on how the system will be configured.
 - Read the "Details" section below for important information on how the system will be configured.
@@ -23,7 +23,7 @@
 
 ***
 
-## Usage
+### Usage
 
 After booting into arch linux from a live medium in UEFI mode, run the install script with the following commands
 1. `tmux`
@@ -58,5 +58,5 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 
 ## ToDo
 
-- [] a
-- [] b
+- []a
+- []b
