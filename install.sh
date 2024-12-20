@@ -17,17 +17,6 @@
 
 
 
-############
-# need to do
-############
-
-# get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk0, etc.)
-# use persistent block device naming for initramfs and grub configuration
-# run a script every so often to check battery level and charging status and hibernate if necessary
-# make a "variables" file for user to manually enter variables into, instead of editing the install.sh file, edit the variables.txt file
-# add scripts to PATH in /etc/profile
-# change directory name /.snapshots/backups to /.snapshots/tmp??
-
 
 
 #######################
