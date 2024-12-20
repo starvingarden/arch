@@ -245,7 +245,7 @@ sleep 3
 # save arch repo
 su -c "git clone $archURL /home/$userName/arch" "$userName"
 # save packages.txt
-su -c "cp /home/$userName/arch/files/packages.txt /home/$userName" "$userName"
+su -c "cp /home/$userName/arch/packages.txt /home/$userName" "$userName"
 # save config.sh
 su -c "cp /home/$userName/arch/config.sh /home/$userName" "$userName"
 chmod +x /home/"$userName"/config.sh
