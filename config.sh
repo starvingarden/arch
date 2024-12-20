@@ -205,10 +205,13 @@ systemctl enable man-db.timer
 # dont turn on bluetooth on boot
 sed -i 's/#AutoEnable=true/AutoEnable=false/' /etc/bluetooth/main.conf
 
-# configure mlocate
+# configure plocate
+# include btrfs filesystems in results
+sed -i 's/PRUNE_BIND_MOUNTS = "yes"/PRUNE_BIND_MOUNTS = "no"/' /etc/updatedb.conf
+# exclude /.snapshots directory from results
 sed -i 's/PRUNEPATHS = "/PRUNEPATHS = "\/.snapshots /' /etc/updatedb.conf
 updatedb
-#systemctl enable updatedb.timer
+#systemctl enable plocate-updatedb.timer
 
 # configure audio
 #su -c "systemctl --user enable wireplumber.service" "$userName"
