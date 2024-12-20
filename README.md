@@ -1,6 +1,6 @@
 # Description
 
-- This is a bash script that installs Arch Linux on a btrfs filesystem in UEFI mode with sway.
+- This is a bash script that installs Arch Linux automatically. Read the instructions section below for important information.
 - The installation includes printing capabilities, bluetooth, automatic recommended system maintenance, and automatic snapshots of / and /home directories.
 - The "install.sh" script will ask if you want to include the repo owners custom configurations. For details on what this includes, see the "custom configurations" section in the "config.sh" script
 - Cancel the installation at any time with "Ctrl+c"
