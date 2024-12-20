@@ -1,5 +1,0 @@
-# suspend the system when battery level drops to 5% or lower
-# see arch wiki page "Laptop#Hibernate on low battery level"
-# run "udevadm monitor --property" and wait for battery info to appear
-# you may need to add a parameter such as "model_name" to prevent other battery devices from triggering hibernation
-SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-5]", RUN+="/usr/bin/systemctl hibernate"

@@ -1,7 +1,0 @@
-[Unit]
-Description=takes monthly btrfs snapshots of root and home directories
-After=default.target
-Wants=default.target
-
-[Service]
-ExecStart=snapshot-monthly.sh
