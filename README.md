@@ -1,6 +1,6 @@
 # Description
 
-- This is a bash script that installs Arch Linux automatically.
+- This is a bash script that installs Arch Linux in UEFI mode automatically.
 - Read the "Details" section below for important information on how the system will be configured.
 - Read the "Usage" section below for important information on how to run the script.
 
@@ -52,6 +52,11 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 
 # ToDo
 
+- [x] btrfs filesystem with automatic snapshots, cleanup, and rollback
+- [x] full disk encryption
+- [x] swap with hibernation capabilities
+- [x] RAID1 capabilities if user wishes
+- [x] will not interfere with operating systems installed on other disks
 - [ ] get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk0, etc.)
 - [ ] use persistent block device naming for initramfs and grub configuration
 - [ ] run a script every so often to check battery level and charging status and hibernate if necessary
