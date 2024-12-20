@@ -41,7 +41,7 @@ yay -S --needed cheat
 #######
 
 # official repo
-yay -S --needed acpi bat bc cpupower czkawka-cli firewalld fzf github-cli gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages mlocate nano neovim networkmanager-openvpn net-tools tealdeer thefuck trash-cli turbostat unzip zip zoxide
+yay -S --needed acpi bat bc cpupower czkawka-cli firewalld fzf github-cli gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages nano neovim networkmanager-openvpn net-tools plocate tealdeer thefuck trash-cli turbostat unzip zip zoxide
 # aur
 czkawka-gui-bin
 
