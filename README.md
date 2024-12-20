@@ -52,5 +52,5 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 
 # ToDo
 
-[] a
-[] b
+- [ ] a
+- [ ] b
