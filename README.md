@@ -1,4 +1,4 @@
-### Description
+# Description
 
 - This is a bash script that installs Arch Linux automatically. Read the details section below for important information on how the system will be configured.
 - Read the "Details" section below for important information on how the system will be configured.
@@ -6,10 +6,8 @@
 - The installation includes printing capabilities, bluetooth, automatic recommended system maintenance, and automatic snapshots of / and /home directories.
 - The "install.sh" script will ask if you want to include the repo owners custom configurations. For details on what this includes, see the "custom configurations" section in the "config.sh" script
 - Cancel the installation at any time with "Ctrl+c"
-    
-***
 
-#### Details
+# Details
 
 - The installation will remove all data on the disk(s) selected by the user. Installation includes a 1GB FAT32 efi boot partition, and a btrfs root partition that takes up the rest of the disk. This includes subvolumes @ mounted at /, @snapshots mounted at /.snapshots, @home mounted at /home, and @var_log mounted at /var/log
 - The installation comes with some helpful scripts, more will be located at /usr/local/bin and ~/.bin after installation
@@ -21,9 +19,7 @@
         - saves necessary dotfiles and pushes them to the online git repo
         - must be run from inside the arch repo
 
-***
-
-### Usage
+# Usage
 
 After booting into arch linux from a live medium in UEFI mode, run the install script with the following commands
 1. `tmux`
@@ -54,9 +50,7 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 8. `./install.sh`
     - Read the input prompts carefully. This will install arch linux, along with the sway tiling window manager
 
-***
+# ToDo
 
-## ToDo
-
-- []a
-- []b
+[] a
+[] b
