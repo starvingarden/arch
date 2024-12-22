@@ -18,6 +18,7 @@ cd
 rm -rf paru
 # configure paru
 SortBy = popularity
+sudo sed -i '/\[options\]/a SortBy = popularity' /etc/paru.conf
 sudo sed -i 's/#BottomUp/BottomUp/' /etc/paru.conf
 sudo sed -i 's/#RemoveMake/RemoveMake = yes/' /etc/paru.conf
 sudo sed -i 's/#CleanAfter/CleanAfter/' /etc/paru.conf
