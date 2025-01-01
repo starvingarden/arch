@@ -213,6 +213,12 @@ sed -i 's/PRUNEPATHS = "/PRUNEPATHS = "\/.snapshots /' /etc/updatedb.conf
 updatedb
 #systemctl enable plocate-updatedb.timer
 
+# configure gnome-keyring
+# automatically change keyring password with user password
+echo "password    optional    pam_gnome_keyring.so" >> /etc/pam.d/passwd
+# automatically unlock the keyring on login
+
+
 # configure audio
 #su -c "systemctl --user enable wireplumber.service" "$userName"
 #su -c "systemctl --user enable pipewire-pulse.service" "$userName"
