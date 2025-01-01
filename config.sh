@@ -169,8 +169,8 @@ su -c "mkdir /not-snapped/$userName/downloading" "$userName"
 printf "\e[1;32m\nConfiguring system\n\e[0m"
 sleep 3
 
-# enable shadow
-#systemctl enable shadow.timer
+# enable shadow timer
+systemctl enable shadow.timer
 
 # configure flatpak
 # create a symlink so that flatpaks are in /usr/share/applications
