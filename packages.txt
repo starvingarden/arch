@@ -27,6 +27,23 @@ paru
 
 
 
+# install and configure nix
+###########################
+
+# install nix
+paru -S nix
+# configure nix
+# enable the nix daemon
+sudo systemctl enable --now nix-daemon.service
+# add user to the nix-users group
+sudo gpasswd -a YOUR_USERNAME nix-users
+# add the ~/.nix-profile/bin directory to your PATH
+# increase the number of builders
+
+
+
+
+
 # essential packages
 ####################
 
