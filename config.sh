@@ -219,10 +219,10 @@ echo "password    optional    pam_gnome_keyring.so" >> /etc/pam.d/passwd
 # automatically unlock the keyring on login
 # edit the file /etc/pam.d/login
 # add "auth optional pam_gnome_keyring.so" at the end of the "auth" section
-lineNumber=$(grep -n "auth" login | tail -n 1 | grep -Eo '^[0-9]*')
+lineNumber=$(grep -n "auth" /etc/pam.d/login | tail -n 1 | grep -Eo '^[0-9]*')
 sed -i "${lineNumber}auth optional pam_gnome_keyring.so" /etc/pam.d/login
 # add "session optional pam_gnome_keyring.so auto_start at the end of the "session" section
-lineNumber=$(grep -n "session" login | tail -n 1 | grep -Eo '^[0-9]*')
+lineNumber=$(grep -n "session" /etc/pam.d/login | tail -n 1 | grep -Eo '^[0-9]*')
 sed -i "${lineNumber}session optional pam_gnome_keyring.so auto_start" /etc/pam.d/login
 
 # configure audio
