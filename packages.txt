@@ -37,9 +37,8 @@ paru -S nix
 sudo systemctl enable --now nix-daemon.service
 # add user to the nix-users group
 sudo gpasswd -a YOUR_USERNAME nix-users
-# add the ~/.nix-profile/bin directory to your PATH
 # increase the number of builders
-
+su -c "echo -e 'max-jobs = auto' >> /etc/nix/nix.conf" root
 
 
 
