@@ -31,9 +31,9 @@ paru
 ####################
 
 # official repo
-yay -S --needed arch-wiki-docs arch-wiki-lite bash-completion exfatprogs flatpak ifuse libimobiledevice npm ntfs-3g python-pip
+paru -S --needed arch-wiki-docs arch-wiki-lite bash-completion exfatprogs flatpak ifuse libimobiledevice npm ntfs-3g python-pip
 # aur
-yay -S --needed cheat
+paru -S --needed cheat
 
 
 
@@ -41,9 +41,9 @@ yay -S --needed cheat
 #######
 
 # official repo
-yay -S --needed acpi bat bc cpupower czkawka-cli firewalld fzf github-cli gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages nano neovim networkmanager-openvpn net-tools plocate tealdeer thefuck trash-cli turbostat unzip zip zoxide
+paru -S --needed acpi bat bc cpupower czkawka-cli firewalld fzf github-cli gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages nano neovim networkmanager-openvpn net-tools plocate tealdeer thefuck trash-cli turbostat unzip zip zoxide
 # aur
-czkawka-gui-bin
+paru -S czkawka-gui-bin
 
 
 
@@ -51,12 +51,19 @@ czkawka-gui-bin
 ##################
 
 # official repo
-yay -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes-extra gtk2 gtk3 gtk4 qt5-base qt5-wayland qt6-base qt6-wayland seahorse seatd sway swaybg swayidle waybar wayland wayland-docs wayland-utils wl-clipboard xorg-xwayland
+paru -S --needed archlinux-wallpaper adwaita-qt5 adwaita-qt6 foot gnome-themes-extra gtk2 gtk3 gtk4 qt5-base qt5-wayland qt6-base qt6-wayland seahorse seatd sway swaybg swayidle waybar wayland wayland-docs wayland-utils wl-clipboard xorg-xwayland
 # aur
-yay -S --needed autotiling swaylock-effects ttf-ms-win11 wlogout wl-clip-persist-git
+paru -S --needed autotiling swaylock-effects ttf-ms-win11 wlogout wl-clip-persist-git
 
-####################### fonts
-yay -S --needed nerd-fonts noto-fonts-emoji otf-font-awesome
+
+
+# fonts
+#######
+
+# official repo
+paru -S --needed nerd-fonts noto-fonts-emoji otf-font-awesome
+# aur
+#none
 
 
 
@@ -64,7 +71,7 @@ yay -S --needed nerd-fonts noto-fonts-emoji otf-font-awesome
 ############################################
 
 # official repo
-yay -S --needed iio-sensor-proxy light
+paru -S --needed iio-sensor-proxy light
 # aur
 #none
 
@@ -74,7 +81,7 @@ yay -S --needed iio-sensor-proxy light
 ################
 
 # official repo
-yay -S --needed pipewire pipewire-alsa pipewire-audio pipewire-docs pipewire-jack pipewire-pulse sof-firmware wireplumber
+paru -S --needed pipewire pipewire-alsa pipewire-audio pipewire-docs pipewire-jack pipewire-pulse sof-firmware wireplumber
 # aur
 #none
 
@@ -84,7 +91,7 @@ yay -S --needed pipewire pipewire-alsa pipewire-audio pipewire-docs pipewire-jac
 ####################
 
 # official repo
-yay -S --needed blueman
+paru -S --needed blueman
 # aur
 #none
 
@@ -94,7 +101,7 @@ yay -S --needed blueman
 ###################
 
 # official repo
-yay -S --needed avahi cups cups-pdf foomatic-db-ppds foomatic-db-nonfree-ppds nss-mdns system-config-printer usbutils
+paru -S --needed avahi cups cups-pdf foomatic-db-ppds foomatic-db-nonfree-ppds nss-mdns system-config-printer usbutils
 # aur
 #none
 
@@ -104,9 +111,9 @@ yay -S --needed avahi cups cups-pdf foomatic-db-ppds foomatic-db-nonfree-ppds ns
 ###################
 
 # official repo
-yay -S --needed alacritty android-tools bitwarden bleachbit blender btop clamav clonezilla discord easyeffects feh gammastep gedit gimp glow gnome-disk-utility handbrake handlr libreoffice-fresh lutris mako minetest mkvtoolnix-cli mpv nautilus neofetch nm-connection-editor nnn nvtop obs-studio shellcheck openshot pavucontrol qbittorrent qemu-full steam units vlc xournalpp zathura
+paru -S --needed alacritty android-tools bitwarden bleachbit blender btop clamav clonezilla discord easyeffects feh gammastep gedit gimp glow gnome-disk-utility handbrake handlr libreoffice-fresh lutris mako minetest mkvtoolnix-cli mpv nautilus neofetch nm-connection-editor nnn nvtop obs-studio shellcheck openshot pavucontrol qbittorrent qemu-full steam units vlc xournalpp zathura
 # aur
-yay -S --needed appimagelauncher cava cbonsai downgrade hollywood jackett librewolf-bin makemkv mullvad-vpn-cli notesnook-bin phoronix-test-suite prismlauncher soundcloud-dl spacecadetpinball-git spotify tor-browser-bin upscayl-bin ventoy-bin xdg-ninja
+paru -S --needed appimagelauncher cava cbonsai downgrade hollywood jackett librewolf-bin makemkv notesnook phoronix-test-suite prismlauncher soundcloud-dl spacecadetpinball-git spotify tor-browser-bin upscayl-bin ventoy-bin xdg-ninja
 
 
 
@@ -114,9 +121,9 @@ yay -S --needed appimagelauncher cava cbonsai downgrade hollywood jackett librew
 ###############
 
 # official repo
-yay -S --needed freerdp hashcat hydra inetutils john metasploit nmap redis
+paru -S --needed freerdp hashcat hydra inetutils john metasploit nmap redis
 # aur
-yay -S --needed burpsuite nessus
+paru -S --needed burpsuite nessus
 
 
 
@@ -125,25 +132,25 @@ yay -S --needed burpsuite nessus
 
 # gedit
 # official repo
-yay -S --needed gedit-plugins
+paru -S --needed gedit-plugins
 # aur
 #none
 
 # nautilus (see "GNOME/Files" and "file manager functionality" arch wiki pages)
 # official repo
-yay -S --needed gvfs-afc gvfs-gphoto2 gvfs-mtp sushi
+paru -S --needed gvfs-afc gvfs-gphoto2 gvfs-mtp sushi
 # aur
 #none
 
 # qemu
 # official repo
-yay -S --needed dnsmasq iptables-nft libvirt virt-manager
+paru -S --needed dnsmasq iptables-nft libvirt virt-manager
 # aur
 #none
 
 # zathura
 # official repo
-yay -S --needed zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps
+paru -S --needed zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps
 # aur
 #none
 
