@@ -39,7 +39,10 @@ sudo systemctl enable --now nix-daemon.service
 sudo gpasswd -a YOUR_USERNAME nix-users
 # increase the number of builders
 su -c "echo -e 'max-jobs = auto' >> /etc/nix/nix.conf" root
-
+# add the latest channel
+nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+# update channel
+nix-channel --update
 
 
 
