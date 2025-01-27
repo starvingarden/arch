@@ -14,6 +14,7 @@
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
 # user should specify disks in the order they want (osdisk0 should be the 1st listed, osdisk1 2nd listed, etc.)
 # kpartx command to use disks that are already configured
+# get rid of reflector code???
 
 
 
