@@ -38,7 +38,7 @@ sleep 3
 # install reflector
 pacman -S --needed --noconfirm reflector
 # configure reflector
-echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
+#echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--latest [[:graph:]]*/--latest 15/' /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--sort [[:graph:]]*/--sort rate/' /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--protocol [[:graph:]]*/--protocol https/' /etc/xdg/reflector/reflector.conf
