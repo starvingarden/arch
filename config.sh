@@ -139,10 +139,10 @@ mkdir /.snapshots/root/daily
 mkdir /.snapshots/home/daily
 mkdir /.snapshots/root/weekly
 mkdir /.snapshots/home/weekly
-#mkdir /.snapshots/root/monthly
-#mkdir /.snapshots/home/monthly
-#mkdir /.snapshots/root/yearly
-#mkdir /.snapshots/home/yearly
+mkdir /.snapshots/root/monthly
+mkdir /.snapshots/home/monthly
+mkdir /.snapshots/root/yearly
+mkdir /.snapshots/home/yearly
 
 # set permissions for /.snapshot directory
 chmod -R 700 /.snapshots
