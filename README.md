@@ -68,3 +68,4 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 - [ ] edit sysgit.sh script
 - [ ] change snapshot intervals and how many snapshots to keep
 - [ ] rewrite rollback.sh script
+- [ ] allow setting number of snapshots to 0 in snapshot scripts
