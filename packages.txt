@@ -50,7 +50,7 @@ nix-channel --update
 ####################
 
 # official repo
-paru -S --needed arch-wiki-docs arch-wiki-lite bash-completion exfatprogs flatpak ifuse libimobiledevice npm ntfs-3g python-pip ufw
+paru -S --needed arch-wiki-docs arch-wiki-lite bash-completion exfatprogs firewalld flatpak ifuse libimobiledevice npm ntfs-3g python-pip ufw
 # aur
 paru -S --needed cheat
 
@@ -60,7 +60,7 @@ paru -S --needed cheat
 #######
 
 # official repo
-paru -S --needed acpi bat bc cpupower czkawka-cli firewalld fzf github-cli gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages nano neovim networkmanager-openvpn net-tools plocate tealdeer thefuck trash-cli turbostat unzip zip zoxide
+paru -S --needed acpi bat bc cpupower czkawka-cli fzf github-cli gnupg hwinfo inotify-tools libqalculate lshw man-db man-pages nano neovim networkmanager-openvpn net-tools plocate tealdeer thefuck trash-cli turbostat unzip zip zoxide
 # aur
 paru -S czkawka-gui-bin
 
