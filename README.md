@@ -65,3 +65,6 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 - [ ] add scripts to PATH in /etc/profile
 - [ ] change directory name /.snapshots/backups to /.snapshots/tmp??
 - [ ] utilize nix package manager
+- [ ] edit sysgit.sh script
+- [ ] change snapshot intervals and how many snapshots to keep
+- [ ] rewrite rollback.sh script
