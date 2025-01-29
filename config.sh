@@ -191,7 +191,8 @@ systemctl enable cpupower.service
 systemctl enable paccache.timer
 
 # enable firewall
-#systemctl enable firewalld.service
+systemctl enable --now ufw.service
+ufw enable
 
 # enable man-db.timer
 systemctl start man-db.service
