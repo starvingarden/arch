@@ -56,7 +56,7 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 - [x] full disk encryption
 - [x] swap with hibernation capabilities
 - [x] optional RAID1 capabilities
-- [ ] easy replacing/upgrading of RAID disks
+- [ ] easy replacing/upgrading/adding/removing of RAID/non-RAID disks
 - [ ] will not interfere with operating systems installed on other disks
 - [ ] get disk serial number with lsblk -o name,serial (user should use this to physically label cable/disks osdisk0, etc.)
 - [ ] use persistent block device naming for initramfs and grub configuration
