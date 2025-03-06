@@ -68,3 +68,4 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 - [ ] utilize nix package manager
 - [ ] set permissions for system files in sysgit.sh script
 - [ ] rewrite rollback.sh script
+- [ ] hibernate after 5 failed logins
