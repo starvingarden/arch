@@ -39,7 +39,7 @@ sleep 3
 pacman -S --needed --noconfirm reflector
 # configure reflector
 #echo -e "--country $reflectorCode" >> /etc/xdg/reflector/reflector.conf
-sed -Ei 's/--latest [[:graph:]]*/--latest 50/' /etc/xdg/reflector/reflector.conf
+sed -Ei 's/--latest [[:graph:]]*/--latest 20/' /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--sort [[:graph:]]*/--sort age/' /etc/xdg/reflector/reflector.conf
 sed -Ei 's/--protocol [[:graph:]]*/--protocol https/' /etc/xdg/reflector/reflector.conf
 systemctl enable reflector.timer
