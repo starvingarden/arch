@@ -23,7 +23,7 @@
 After booting into arch linux from a live medium in UEFI mode, run the install script with the following commands
 1. `tmux`
     - tmux is a terminal multiplexer, meaning it enables multiple terminals to be created and controlled on the same screen
-    - after running the `tmux` command, you can now do a few useful things with your screen by pressing `Ctrl+b` followed by pressing 1 of the following keys
+    - after running the `tmux` command, you can now do a few useful things with your screen by pressing `Ctrl+b` followed by using the following commands
         - `%`: to split the tmux terminal into 2 tmux terminals left and right
         - `"`: to split the tmux terminal into 2 tmux terminals top and bottom
         - `o`: to change to a different tmux terminal if there are multiple tmux terminals on screen
