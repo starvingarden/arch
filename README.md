@@ -31,6 +31,7 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
         - `x`: to close the current tmux terminal
         - `&`: to quit tmux altogether
         - `?`: to list all tmux keybindings
+        - to copy and paste, press `Ctrl + space`, use the arrow keys to select text, the press `Enter`
 2. if you need to connect to wifi, run...
     - `iwctl`
     - `device list`
