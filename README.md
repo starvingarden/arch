@@ -63,7 +63,7 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 - [ ] run a script every so often to check battery level and charging status and hibernate if necessary
 - [ ] make a "variables" file for user to manually enter variables into, instead of editing the install.sh file, edit the variables.txt file
 - [ ] make internet-check.sh continue checking for internet even if successful
-- [ ] add scripts to PATH in /etc/profile
+- [x] add scripts to PATH in /etc/profile
 - [ ] change directory name /.snapshots/backups to /.snapshots/tmp??
 - [ ] utilize nix package manager
 - [ ] set permissions for system files in sysgit.sh script
