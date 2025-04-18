@@ -12,9 +12,16 @@
 # to create a raid1 filesystem (mkfs.btrfs -L filesystemLabel -f -m raid1 -d raid1 /dev/sda1 /dev/sdb1 /dev/sdc1)
 # to add a disk sdb1 to a single disk filesystem on sda1 and convert to raid1 (mount /dev/sda1 /mnt && btrfs device add /dev/sdb1 /mnt && btrfs balance start -dconvert=raid1 -mconvert=raid1 /mnt)
 # see arch wiki page "btrfs#Multi-device file system" for information on how to convert raid levels, and add/remove/replace devices
+
+######
+# todo
+######
+
 # user should specify disks in the order they want (osdisk0 should be the 1st listed, osdisk1 2nd listed, etc.)
 # kpartx command to use disks that are already configured
 # get rid of reflector code???
+# import scripts git repo during config.sh
+
 
 
 
