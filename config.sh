@@ -35,7 +35,7 @@ fi
 userName=$(users | grep -Eio '^[[:graph:]]*[^ ]')
 
 
-# # check if installing on a laptop
+# check if installing on a laptop ##################################################################
 laptopInstall=$(neofetch battery)
 if [ -z "$laptopInstall" ]
 then
@@ -163,6 +163,25 @@ su -c "mkdir /not-snapped/$userName/downloading" "$userName"
 
 
 
+# configure scripts
+###################
+
+printf "\e[1;32m\nConfiguring scripts\n\e[0m"
+sleep 3
+
+# add scripts to $PATH environment variable
+echo -e 'export PATH=/scripts/all:$PATH'    >> /etc/profile
+echo -e 'export PATH=/scripts/root:$PATH'   >> /etc/profile
+
+
+
+
+
+
+
+
+
+
 # configure system
 ##################
 
@@ -177,7 +196,7 @@ systemctl enable shadow.timer
 #ln -s /var/lib/flatpak /usr/share/applications
 
 # set systemd default target
-########## see what the default target is out of the box
+######################################################################### see what the default target is out of the box
 #systemctl set-default graphical.target
 
 # enable clock sync
