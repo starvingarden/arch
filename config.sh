@@ -147,11 +147,11 @@ mkdir /.snapshots/home/yearly
 # set permissions for /.snapshot directory
 chmod -R 700 /.snapshots
 
-# configure not-snapped directory
-chmod 755 /not-snapped
-mkdir /not-snapped/"$userName"
-chown "$userName":users /not-snapped/"$userName"
-chmod 744 /not-snapped/"$userName"
+# configure date directory
+chmod 755 /data
+mkdir /data/"$userName"
+chown "$userName":users /data/"$userName"
+chmod 744 /data/"$userName"
 
 
 
