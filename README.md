@@ -24,14 +24,16 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
 1. `tmux`
     - tmux is a terminal multiplexer, meaning it enables multiple terminals to be created and controlled on the same screen
     - after running the `tmux` command, you can now do a few useful things with your screen by pressing `Ctrl+b` followed by pressing 1 of the following keys
-        - `[`: to scroll with the arrow keys, press `q` to exit scrolling mode
         - `%`: to split the tmux terminal into 2 tmux terminals left and right
         - `"`: to split the tmux terminal into 2 tmux terminals top and bottom
         - `o`: to change to a different tmux terminal if there are multiple tmux terminals on screen
         - `x`: to close the current tmux terminal
         - `&`: to quit tmux altogether
         - `?`: to list all tmux keybindings
-        - to copy and paste, press `Ctrl + space`, use the arrow keys to select text, the press `Enter`
+        - `[`: to enter copy mode, press `q` to exit copy mode
+        - `Ctrl + space`: to select text in copy mode
+        - `Ctrl + w`: copy text in copy mode
+        - `]`: to paste text
 2. if you need to connect to wifi, run...
     - `iwctl`
     - `device list`
