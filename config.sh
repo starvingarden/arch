@@ -152,7 +152,6 @@ chmod 755 /not-snapped
 mkdir /not-snapped/"$userName"
 chown "$userName":users /not-snapped/"$userName"
 chmod 744 /not-snapped/"$userName"
-su -c "mkdir /not-snapped/$userName/downloading" "$userName"
 
 
 
