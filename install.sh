@@ -21,6 +21,7 @@
 # kpartx command to use disks that are already configured
 # get rid of reflector code???
 # import scripts git repo during config.sh
+# change "not-snapped" directory to "data"
 
 
 
