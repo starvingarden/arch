@@ -160,7 +160,7 @@ done
 
 
 ################################################################################
-# add "microcode" to mkinitcpio hooks????? (see arch wiki news about mkinitcpio hook) (see microcode arch wiki page)
+# add "microcode" to mkinitcpio hooks after autodetect????? (see arch wiki news about mkinitcpio hook) (see microcode arch wiki page)
 
 
 # configure mkinitcpio.conf (see the following arch wiki pages)
