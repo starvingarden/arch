@@ -22,6 +22,7 @@
 # get rid of reflector code???
 # import scripts git repo during config.sh
 # change "not-snapped" directory to "data"
+# partition names, encrypted container names, volume group names, logical volume names, filesystem names, and logical volume paths should all be indexed starting with "1" instead of "0"
 
 
 
@@ -324,6 +325,7 @@ ramSize=$(echo "$ramsizeInteger"M)
 #########################
 
 # set os partition(s)
+# used when encrypting partitions, and creating and mounting filesystems
 # create empty arrays for os partitions
 efiPartitions=()
 cryptosPartitions=()
