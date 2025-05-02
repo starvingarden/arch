@@ -324,8 +324,8 @@ ramSize=$(echo "$ramsizeInteger"M)
 # set arrays for os disks
 #########################
 
-# set os partition(s)
-# used when encrypting partitions, and creating and mounting filesystems
+# set os partitions
+# used when encrypting partition(s), and creating and mounting filesystems
 # create empty arrays for os partitions
 efiPartitions=()
 cryptosPartitions=()
@@ -343,8 +343,8 @@ do
         cryptosPartitions+=("$element"p2)
     fi
 done
-# efi partitions should be in the form of "sda1", "nvme0n1p1", etc.
-# encrypted os partitions should be in the form of "sda2", "nvme0n1p2", etc.
+# efi partition(s) should be in the form of "sda1", "nvme0n1p1", etc.
+# encrypted os partition(s) should be in the form of "sda2", "nvme0n1p2", etc.
 
 
 # set os partition names
@@ -364,19 +364,19 @@ do
     cryptosPartition=(osdisk"$element"p2)
     cryptospartitionNames+=("$cryptosPartition")
 done
-# efi partition names should be in the form of "osdisk0p1", "osdisk1p1", etc.
-# encrypted os partition names should be in the form of "osdisk0p2", "osdisk1p2", etc.
+# efi partition name(s) should be in the form of "osdisk0p1", "osdisk1p1", etc.
+# encrypted os partition name(s) should be in the form of "osdisk0p2", "osdisk1p2", etc.
 
 
 # set os encrypted container name(s)
-# used to name os encrypted containers
+# used to name os encrypted container(s)
 # create empty array for os encrypted container name(s)
 osencryptedcontainerNames=()
 for element in "${!osDisks[@]}"
 do
     osencryptedcontainerNames+=(cryptos"$element")
 done
-# os encrypted container names should be of the form "cryptos0", "cryptos1", etc.
+# os encrypted container name(s) should be of the form "cryptos0", "cryptos1", etc.
 
 
 # set os volume group name(s)
@@ -387,10 +387,10 @@ for element in "${!osDisks[@]}"
 do
     osvolgroupNames+=(osvolgroup"$element")
 done
-# os volume group names should be in the form of "osvolgroup0", "osvolgroup1", etc.
+# os volume group name(s) should be in the form of "osvolgroup0", "osvolgroup1", etc.
 
 
-# set os logical volume names
+# set os logical volume name
 # used to name os logical volumes
 # create empty arrays for os logical volume names
 swaplvNames=()
@@ -430,15 +430,16 @@ done
 # a RAID1 root filesystem name should be "rootraidfs"
 
 
-# set array for all root logical volume paths
+# set array for all root logical volume path(s)
 # used when creating filesystems
-# create empty array for all root logical volume paths
+# create empty array for all root logical volume path(s)
 rootlvPaths=()
 # set root logical volume paths
 for element in "${!osDisks[@]}"
 do
     rootlvPaths+=(/dev/"${osvolgroupNames[$element]}"/"${rootlvNames[$element]}")
 done
+# root logical volume path(s) should be in the form of "/dev/osvolgroup0/rootlv0", "/dev/osvolgroup1/rootlv1"
 
 
 
@@ -448,6 +449,7 @@ done
 ###########################
 
 # set data partition(s)
+# used when encrypting partition(s)
 # create an empty array for encrypted data partition(s)
 cryptdataPartitions=()
 # set data partitions
