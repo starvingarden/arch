@@ -431,7 +431,7 @@ done
 
 
 # set array for all root logical volume path(s)
-# used when creating filesystems
+# used when creating root filesystem
 # create empty array for all root logical volume path(s)
 rootlvPaths=()
 # set root logical volume paths
@@ -464,7 +464,7 @@ do
         cryptdataPartitions+=("$element"p1)
     fi
 done
-# data partitions should be in the form of "sda1", "nvme0n1p1", etc.
+# data partition(s) should be in the form of "sda1", "nvme0n1p1", etc.
 
 
 # set data partition name(s)
@@ -477,44 +477,44 @@ do
     cryptdataPartition=(datadisk"$element"p1)
     cryptdatapartitionNames+=("$cryptdataPartition")
 done
-# encrypted data partition names should be in the form of "datadisk0p1", "datadisk1p1", etc.
+# encrypted data partition name(s) should be in the form of "datadisk0p1", "datadisk1p1", etc.
 
 
 # set data encrypted container name(s)
-# used to name data encrypted containers
+# used to name data encrypted container(s)
 # create empty array for data encrypted container name(s)
 dataencryptedcontainerNames=()
 for element in "${!dataDisks[@]}"
 do
     dataencryptedcontainerNames+=(cryptdata"$element")
 done
-# data encrypted container names should be of the form "cryptdata0", "cryptdata1", etc.
+# data encrypted container name(s) should be of the form "cryptdata0", "cryptdata1", etc.
 
 
 # set data volume group name(s)
 # used to name data volume group(s)
-# create empty array for data volume group names
+# create empty array for data volume group name(s)
 datavolgroupNames=()
 for element in "${!dataDisks[@]}"
 do
     datavolgroupNames+=(datavolgroup"$element")
 done
-# data volume group names should be in the form of "datavolgroup0", "datavolgroup1", etc.
+# data volume group name(s) should be in the form of "datavolgroup0", "datavolgroup1", etc.
 
 
 # set data logical volume name(s)
-# create empty array for data logical volume names
+# create empty array for data logical volume name(s)
 datalvNames=()
 for element in "${!dataDisks[@]}"
 do
     datalvNames+=(datalv"$element")
 done
-# data logical volume names should be in the form of "datalv0", "datalv1", etc.
+# data logical volume name(s) should be in the form of "datalv0", "datalv1", etc.
 
 
-# set data filesystem name(s)
-# used to name data filesystem(s)
-# create empty array for data filesystem names
+# set data filesystem name
+# used to name data filesystem
+# create empty array for data filesystem name
 datafsNames=()
 # only set data filesystem names if using data disks
 if [ "${#dataDisks[@]}" -gt 0 ]
@@ -534,15 +534,16 @@ fi
 # a RAID1 data filesystem should be "dataraidfs"
 
 
-# set array for all data logical volume paths
-# used when creating filesystems
-# create empty array for all data logical volume paths
+# set array for all data logical volume path(s)
+# used when creating data filesystem
+# create empty array for data logical volume path(s)
 datalvPaths=()
 # set data logical volume paths
 for element in "${!dataDisks[@]}"
 do
     datalvPaths+=(/dev/"${datavolgroupNames[$element]}"/"${datalvNames[$element]}")
 done
+# data logical volume path(s) should be in the form of "/dev/datavolgroup0/datalv0", "/dev/datavolgroup1/datalv1"
 
 
 
