@@ -356,13 +356,13 @@ cryptospartitionNames=()
 # set efi partition name(s)
 for element in "${!osDisks[@]}"
 do
-    efiPartition=(osdisk"$element"p1)
+    efiPartition=(osdisk"(($element + 1))"p1)
     efipartitionNames+=("$efiPartition")
 done
 # set encrypted os partition name(s)
 for element in "${!osDisks[@]}"
 do
-    cryptosPartition=(osdisk"$element"p2)
+    cryptosPartition=(osdisk"($element + 1)"p2)
     cryptospartitionNames+=("$cryptosPartition")
 done
 # efi partition name(s) should be in the form of "osdisk0p1", "osdisk1p1", etc.
