@@ -252,7 +252,7 @@ dataDisks=($dataDisks)
 printf "\e[1;32m\nInstalling packages needed for installation\n\e[0m"
 sleep 3
 
-pacman -S archlinux-keyring btrfs-progs ca-certificates lvm2 neofetch virt-what
+pacman -S archlinux-keyring btrfs-progs ca-certificates lshw lvm2 virt-what
 
 
 
@@ -276,7 +276,7 @@ archURL=$(grep -i 'url' /root/arch/.git/config | grep -Eo '[[:graph:]]*$')
 
 
 # check if installing on virtual machine
-virtualMachine=$(virt-what)
+virtualMachine=$(hostnamectl chassis | grep -io 'vm')
 if [ -z "$virtualMachine" ]
 then
     virtualMachine=false
@@ -286,7 +286,7 @@ fi
 
 
 # check if installing on a laptop
-laptopInstall=$(neofetch battery)
+laptopInstall=$(hostnamectl chassis | grep -io 'laptop')
 if [ -z "$laptopInstall" ]
 then
     laptopInstall=false
@@ -296,7 +296,7 @@ fi
 
 
 # set processor vendor
-processorVendor=$(neofetch --cpu_brand on | grep -i 'cpu' | grep -Eio 'amd|intel' | awk '{print tolower($0)}' | head -n 1)
+processorVendor=$(lshw -class cpu | grep -i 'vendor' | grep -Eio 'amd|intel' | awk '{print tolower($0)}' | head -n 1)
 if [ -z "$processorVendor" ]
 then
     processorVendor=null
@@ -305,7 +305,7 @@ fi
 
 
 # set graphics vendor
-graphicsVendor=$(neofetch --gpu_brand on | grep -i gpu | grep -Eio 'amd|intel|nvidia' | awk '{print tolower($0)}' | head -n 1)
+graphicsVendor=$(lshw -class display | grep -i 'vendor' | grep -Eio 'amd|intel|nvidia' | awk '{print tolower($0)}' | head -n 1)
 if [ -z "$graphicsVendor" ]
 then
     graphicsVendor=null
@@ -316,7 +316,7 @@ fi
 # set ram size
 ramsizeInteger=$(free --mega | grep -i 'mem' | awk '{print $2}')
 ramSize=$(echo "$ramsizeInteger"M)
-# $ramSize should be an integer in gigabytes of the form 1000M
+# $ramSize should be an integer in megabytes of the form of 1000M
 
 
 
