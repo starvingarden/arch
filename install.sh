@@ -22,6 +22,7 @@
 # get rid of reflector code??? DONE
 # import scripts git repo during config.sh
 # change "not-snapped" directory to "data" DONE
+# use better tools for automatically getting system information
 # partition names, encrypted container names, volume group names, logical volume names, filesystem names, and logical volume paths should all be indexed starting with "1" instead of "0"???
 
 
