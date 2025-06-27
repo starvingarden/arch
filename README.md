@@ -30,7 +30,7 @@ After booting into arch linux from a live medium in UEFI mode, run the install s
         - `x`: to close the current tmux terminal
         - `&`: to quit tmux altogether
         - `?`: to list all tmux keybindings
-        - `[`: to enter copy mode, press `q` to exit copy mode
+        - `[`: to enter copy mode, press `q` to exit copy mode (use this mode to scroll)
         - `Ctrl + space`: to select text in copy mode
         - `Ctrl + w`: copy text in copy mode
         - `]`: to paste text
