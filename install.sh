@@ -252,7 +252,7 @@ dataDisks=($dataDisks)
 printf "\e[1;32m\nInstalling packages needed for installation\n\e[0m"
 sleep 3
 
-pacman -S archlinux-keyring btrfs-progs ca-certificates lshw lvm2 virt-what
+pacman -S archlinux-keyring btrfs-progs ca-certificates lshw lvm2
 
 
 
