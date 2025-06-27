@@ -365,8 +365,8 @@ do
     cryptosPartition=(osdisk"$((element + 1))"p2)
     cryptospartitionNames+=("$cryptosPartition")
 done
-# efi partition name(s) should be in the form of "osdisk0p1", "osdisk1p1", etc.
-# encrypted os partition name(s) should be in the form of "osdisk0p2", "osdisk1p2", etc.
+# efi partition name(s) should be in the form of "osdisk1p1", "osdisk2p1", etc.
+# encrypted os partition name(s) should be in the form of "osdisk1p2", "osdisk2p2", etc.
 
 
 # set os encrypted container name(s)
