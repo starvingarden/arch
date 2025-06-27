@@ -18,10 +18,10 @@
 ######
 
 # user should specify disks in the order they want (osdisk0 should be the 1st listed, osdisk1 2nd listed, etc.)
-# kpartx command to use disks that are already configured
-# get rid of reflector code???
+# kpartx command to use disks that are already configured??
+# get rid of reflector code??? DONE
 # import scripts git repo during config.sh
-# change "not-snapped" directory to "data"
+# change "not-snapped" directory to "data" DONE
 # partition names, encrypted container names, volume group names, logical volume names, filesystem names, and logical volume paths should all be indexed starting with "1" instead of "0"???
 
 
