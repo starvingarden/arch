@@ -806,6 +806,7 @@ for element in "${!osDisks[@]}"
 do
     # wipe the partition table
     sgdisk --zap-all /dev/"${osDisks[$element]}"
+    #wipefs -a /dev/sda?????
     # create partition #1 1GB in size
     sgdisk --new=1:0:+1G /dev/"${osDisks[$element]}"
     # set partition #1 type to "EFI system partition"
